@@ -1,0 +1,19 @@
+﻿Date received,Product,Sub-product,Issue,Sub-issue,Consumer complaint narrative,Company public response,Company,State,ZIP code,Tags,Submitted via,Date sent to company,Company response to consumer,Timely response?,Complaint ID
+2024-01-15T10:00:00Z,Checking or savings account,,Synthetic demonstration issue,,"SYNTHETIC example, not a real consumer.
+Second line.",,SYNTHETIC COMPANY 1,CA,,,Web,2024-01-15T11:00:00Z,Closed with explanation,Yes,1
+2024-02-15T10:00:00Z,Debt collection,,Synthetic demonstration issue,,,,SYNTHETIC COMPANY 0,NY,,,Web,2024-02-15T11:00:00Z,Closed with explanation,Yes,2
+2024-03-15T10:00:00Z,Mortgage,,Synthetic demonstration issue,,"SYNTHETIC example, not a real consumer.
+Second line.",,SYNTHETIC COMPANY 1,CA,,,Web,2024-03-15T11:00:00Z,Closed with explanation,Yes,3
+2024-01-15T10:00:00Z,Checking or savings account,,Synthetic demonstration issue,,,,SYNTHETIC COMPANY 0,NY,,,Web,2024-01-15T11:00:00Z,Closed with monetary relief,No,4
+2024-02-15T10:00:00Z,Debt collection,,Synthetic demonstration issue,,"SYNTHETIC example, not a real consumer.
+Second line.",,SYNTHETIC COMPANY 1,CA,,,Web,2024-02-15T11:00:00Z,Closed with explanation,Yes,5
+2024-03-15T10:00:00Z,Mortgage,,Synthetic demonstration issue,,,,SYNTHETIC COMPANY 0,NY,,,Web,2024-03-15T11:00:00Z,Closed with explanation,Yes,6
+2024-01-15T10:00:00Z,Checking or savings account,,Synthetic demonstration issue,,"SYNTHETIC example, not a real consumer.
+Second line.",,SYNTHETIC COMPANY 1,CA,,,Web,2024-01-15T11:00:00Z,Closed with explanation,Yes,7
+2024-02-15T10:00:00Z,Debt collection,,Synthetic demonstration issue,,,,SYNTHETIC COMPANY 0,NY,,,Web,2024-02-15T11:00:00Z,Closed with monetary relief,No,8
+2024-03-15T10:00:00Z,Mortgage,,Synthetic demonstration issue,,"SYNTHETIC example, not a real consumer.
+Second line.",,SYNTHETIC COMPANY 1,CA,,,Web,2024-03-15T11:00:00Z,Closed with explanation,Yes,9
+2024-01-15T10:00:00Z,Checking or savings account,,Synthetic demonstration issue,,,,SYNTHETIC COMPANY 0,NY,,,Web,2024-01-15T11:00:00Z,Closed with explanation,Yes,10
+2024-02-15T10:00:00Z,Debt collection,,Synthetic demonstration issue,,"SYNTHETIC example, not a real consumer.
+Second line.",,SYNTHETIC COMPANY 1,CA,,,Web,2024-02-15T11:00:00Z,Closed with explanation,Yes,11
+2024-03-15T10:00:00Z,Mortgage,,Synthetic demonstration issue,,,,SYNTHETIC COMPANY 0,NY,,,Web,2024-03-15T11:00:00Z,Closed with monetary relief,No,12

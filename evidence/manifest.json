@@ -1,0 +1,11 @@
+{
+  "analysis.md": "e048121d2a2d034667431a2d436fe5843505a80da4ff289c339249667380dc12",
+  "cross_tables.csv": "de7bd4a3293e931cbca60e178ac1b1ab6e30388340570e5679f0ab1228b673ae",
+  "frequencies.csv": "f3b0849f2602355aa84c15f24e9024493ebd911154655b46d40693c588cb2cd2",
+  "full_run.json": "ae3209b4b6d54c87edd893669408589ed05080403c488ddb2ee8484492431610",
+  "quality.csv": "dfe42134ecf34b87d04832097cbef8c66f1c4955d96855f2bba974448c774ff4",
+  "reference_comparison.json": "f08104c125f74fb46b80e4c118af718b32ad72f0acc6cf0dc16e05e8b01a463d",
+  "reference_control.json": "b9a72b160e3e9e6b45f6de69ee0480fb53ca6992f30abb7b4f04ff049c4e3ea1",
+  "source_fingerprint.json": "e7d085f7dafc99b77f909f82cbaea6c30909f34c46bce96fe1ae94107be6a507",
+  "test_results.txt": "f5e5f1d829c26260e6472fea728883fdd2caa8ec3326b403ca47498f16f8a4b7"
+}

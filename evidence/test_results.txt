@@ -1,0 +1,25 @@
+test_cli_end_to_end (test_analyzer.AnalyzerTests.test_cli_end_to_end) ... ok
+test_cli_rejects_overwriting_input (test_analyzer.AnalyzerTests.test_cli_rejects_overwriting_input) ... ok
+test_duplicate_header_fails (test_analyzer.AnalyzerTests.test_duplicate_header_fails) ... ok
+test_duplicate_numeric_id_across_progress_batches (test_analyzer.AnalyzerTests.test_duplicate_numeric_id_across_progress_batches) ... ok
+test_empty_file_and_header_only_are_distinguished (test_analyzer.AnalyzerTests.test_empty_file_and_header_only_are_distinguished) ... ok
+test_empty_value_is_not_literal_na_or_zero (test_analyzer.AnalyzerTests.test_empty_value_is_not_literal_na_or_zero) ... ok
+test_export_privacy_input_integrity_and_checksums (test_analyzer.AnalyzerTests.test_export_privacy_input_integrity_and_checksums) ... ok
+test_invalid_date_is_reported_and_not_dropped (test_analyzer.AnalyzerTests.test_invalid_date_is_reported_and_not_dropped) ... ok
+test_limit_is_labeled_and_exact_eof_is_complete (test_analyzer.AnalyzerTests.test_limit_is_labeled_and_exact_eof_is_complete) ... ok
+test_manual_counts_and_reconciliation (test_analyzer.AnalyzerTests.test_manual_counts_and_reconciliation) ... ok
+test_missing_invalid_and_zero_ids (test_analyzer.AnalyzerTests.test_missing_invalid_and_zero_ids) ... ok
+test_missing_required_column_fails (test_analyzer.AnalyzerTests.test_missing_required_column_fails) ... ok
+test_negative_forwarding_and_same_day_order (test_analyzer.AnalyzerTests.test_negative_forwarding_and_same_day_order) ... ok
+test_quoted_comma_and_multiline_are_one_record (test_analyzer.AnalyzerTests.test_quoted_comma_and_multiline_are_one_record) ... ok
+test_reordered_header_is_supported (test_analyzer.AnalyzerTests.test_reordered_header_is_supported) ... ok
+test_short_record_fails_instead_of_silent_fill (test_analyzer.AnalyzerTests.test_short_record_fails_instead_of_silent_fill) ... ok
+test_timezone_uses_utc_year (test_analyzer.AnalyzerTests.test_timezone_uses_utc_year) ... ok
+test_tracker_cap_is_explicit (test_analyzer.AnalyzerTests.test_tracker_cap_is_explicit) ... ok
+test_unclosed_quoted_record_fails (test_analyzer.AnalyzerTests.test_unclosed_quoted_record_fails) ... ok
+test_unknown_timeliness_is_not_in_rate_denominator (test_analyzer.AnalyzerTests.test_unknown_timeliness_is_not_in_rate_denominator) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.468s
+
+OK

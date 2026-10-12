@@ -1,0 +1,25 @@
+﻿type,metric,count
+missing,Date received,0
+missing,Product,121
+missing,Sub-product,235415
+missing,Issue,151
+missing,Sub-issue,923106
+missing,Consumer complaint narrative,12730795
+missing,Company public response,7706704
+missing,Company,0
+missing,State,62097
+missing,ZIP code,1612
+missing,Tags,15765213
+missing,Submitted via,0
+missing,Date sent to company,56922
+missing,Company response to consumer,274577
+missing,Timely response?,0
+missing,Complaint ID,2390
+quality,invalid_received,0
+quality,invalid_sent,0
+quality,negative_forwarding_timestamp,7055
+quality,negative_forwarding_calendar_day,7054
+quality,missing_id,2390
+quality,invalid_id,0
+quality,duplicate_id_extra_rows,0
+quality,unique_numeric_ids,16542986

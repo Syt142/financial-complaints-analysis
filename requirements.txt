@@ -1,0 +1,3 @@
+# Analyzer, CLI, demo and tests require Python 3.10+ standard library only.
+# Optional report regeneration only:
+# reportlab==4.4.9
