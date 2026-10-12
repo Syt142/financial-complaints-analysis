@@ -136,7 +136,7 @@ bars.categoryAxis.labels.fontName='CN';bars.categoryAxis.labels.fontSize=10
 bars.valueAxis.labels.fontName='CN';bars.valueAxis.labels.fontSize=10
 bars.valueAxis.valueMin=0;bars.valueAxis.valueMax=600;bars.valueAxis.valueStep=200
 bars.bars[0].fillColor=colors.HexColor('#435C75');bars.bars[0].strokeColor=None
-chart.add(bars);chart.add(String(4,157,'万条',fontName='CN',fontSize=10))
+chart.add(bars);chart.add(String(42,165,'单位：万条',fontName='CN',fontSize=10))
 p('图2 2020至2025年的年度投诉记录数',CAP);story.append(chart)
 md.append('图2数据（万条）：'+str({str(y):round(f['year'][str(y)]/10000,2) for y in range(2020,2026)}))
 p('2025年记录数比2024年增长99.08%。其中约90.25%的新增记录来自“Credit reporting or other personal consumer reports”标签。因此后续异常线索应按产品细分，不能只对全库总量设置阈值。图2不纳入2026这个未覆盖全年期间。')
@@ -163,7 +163,7 @@ p('峰值内存是在扫描结束时读取，覆盖此前进程峰值，不包�
 
 # Main text page 6
 page();h('7 创新思路及其证据边界')
-p('<b>程序层面的改进目标：</b>把流式统计、精确ID诊断、总量对账、完整性标记及指标分母放在同一流程中，使大文件分析结果可检查。以上技术分别已有成熟做法；本项目的贡献定位为面向该数据的可复现集成与验证，不声称算法首创。')
+p('<b>程序层面的改进目标：</b>整合流式统计、精确ID诊断、总量对账、完整性标记及指标分母，使大文件分析结果可检查。以上技术分别已有成熟做法；本项目的贡献定位为面向该数据的可复现集成与验证，不声称算法首创。')
 p('<b>数据层面的研究问题：</b>限制为有文本记录时，产品和企业的回应结果分布、异常月份排序是否改变？阶段五拟在同一时期与分类口径下比较全部记录与有文本子样本，并检查调整可观测构成后的差异。尚未完成该检验，不把方向写成已证实的创新发现。')
 h('8 风险控制与阶段二至五计划')
 p('主要风险包括历史分类断点、未完整月份、文本公开的选择偏差及企业回应标签的解释偏差。采用原标签保留、稳定口径子集、完整月份筛选与敏感性分析。异常线索仅供人工复核，不能当作违规事实；公司比较缺少客户量分母。原始叙述不上传，公开仓库只含合成样本和聚合证据。')
