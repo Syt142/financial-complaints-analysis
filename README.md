@@ -2,6 +2,24 @@
 
 阶段一原型。输入老师提供的约 8.93 GB CSV，逐条处理逻辑记录，输出聚合统计、质量诊断、统计口径和校验结果。未训练 AI 模型，不作因果推断，不预测消费者赔付。数据文件不随仓库或压缩包分发。
 
+## 仓库与阶段一提交版本
+
+仓库地址：[Syt142/financial-complaints-analysis](https://github.com/Syt142/financial-complaints-analysis)。这是私有仓库；教师需使用自己的 GitHub 账号接受协作者邀请后才能查看和克隆。仓库地址本身不会授予访问权限，本说明不表示已发送或接受邀请。
+
+阶段一正式代码版本使用 [`phase-1-submission` 标签](https://github.com/Syt142/financial-complaints-analysis/tree/phase-1-submission)。提交报告引用该标签及其对应的提交号，后续开发继续在 `main` 上进行，不移动提交标签。
+
+教师获得权限后，可执行：
+
+```powershell
+git clone https://github.com/Syt142/financial-complaints-analysis.git
+cd financial-complaints-analysis
+git checkout phase-1-submission
+python -m unittest discover -s tests -v
+python -m complaints_analyzer data/synthetic_complaints.csv --outdir results/demo
+```
+
+检出标签用于复现，不用于日常开发。在 PyCharm 继续修改项目时，先确认当前分支为 `main`；检查变更后通过 Git 菜单的“提交”和“推送”保存并上传，Windows 默认快捷键分别为 `Ctrl+K`、`Ctrl+Shift+K`。提交前检查文件清单，避免添加原始数据、本机环境或运行结果。
+
 ## 环境
 
 - Python 3.10 或以上；已在 Windows 与 Python 3.12.14 实测。
@@ -93,6 +111,6 @@ python scripts/build_report.py --output-dir reports
 
 本代码、报告初稿和测试由 Codex AI 助手辅助生成；初始全量分析、后续全量复算及相应核验由助手工具执行。学生已在 PyCharm 中使用项目 `.venv` 的 Python 解释器运行 `python -m unittest discover -s tests -v`，用户提供的控制台日志显示：20 项测试全部通过，耗时 0.446 秒，进程退出代码为 0。这条记录确认了学生的测试复现，不代表学生已亲自完成全量分析或独立编写全部代码。分批记录与证据范围见 [核验与复现记录](docs/verification_records.md)。
 
-团队名称、成员及真实个人分工尚待填写；远程仓库尚未创建，仓库地址待建立后补充。不得把助手工具执行虚构为学生已亲自完成的实验。提交前每位成员应能说明其实际修改、测试、理解与验证内容。
+团队名称、成员及真实个人分工尚待填写；远程仓库地址与正式提交版本约定见上文。不得把助手工具执行虚构为学生已亲自完成的实验。提交前每位成员应能说明其实际修改、测试、理解与验证内容。
 
 外部数据：老师提供的 CFPB 风格投诉数据；定义参考 CFPB 官方页面。未复制第三方项目代码；核心调用 Python 标准库。原始数据的取得范围、版本及使用许可需由团队依据老师说明补充。无论仓库是否公开，仅提交代码、合成样本、说明与聚合证据，不上传原始投诉文件。

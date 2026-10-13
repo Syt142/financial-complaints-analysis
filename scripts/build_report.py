@@ -8,6 +8,7 @@ from datetime import date
 import html
 import json
 from pathlib import Path
+import re
 import subprocess
 
 from reportlab.pdfbase import pdfmetrics
@@ -21,6 +22,8 @@ from reportlab.graphics.shapes import Drawing, Rect, String, Line, Polygon
 from reportlab.graphics.charts.barcharts import VerticalBarChart
 
 ROOT=Path(__file__).resolve().parents[1]
+REPO_URL='https://github.com/Syt142/financial-complaints-analysis'
+SUBMISSION_TAG='phase-1-submission'
 parser=argparse.ArgumentParser()
 parser.add_argument('--output-dir',type=Path,required=True)
 parser.add_argument('--font-regular',default=r'C:\Windows\Fonts\simsun.ttc')
@@ -44,7 +47,9 @@ CAP=ParagraphStyle('Caption',parent=SMALL,fontName='CNBold',leading=14,spaceBefo
 CODE=ParagraphStyle('Code',fontName='Courier',fontSize=10,leading=13.5,spaceBefore=5,spaceAfter=8)
 story=[];md=[]
 def p(text,style=BODY):
-    story.append(Paragraph(text,style));md.append(text.replace('<b>','**').replace('</b>','**').replace('<br/>','\n'))
+    story.append(Paragraph(text,style))
+    md_text=re.sub(r'<link href="([^"]+)"[^>]*>(.*?)</link>',r'[\2](\1)',text)
+    md.append(md_text.replace('<b>','**').replace('</b>','**').replace('<br/>','\n'))
 def h(text):p(text,H1);md[-1]='## '+md[-1]
 def sub(text):p(text,H2);md[-1]='### '+md[-1]
 def gap(n=5):story.append(Spacer(1,n))
@@ -68,7 +73,7 @@ def pct(n,d=N):return f'{100*n/d:.2f}%' if d else '不可计算'
 # Main text page 1
 p('大规模金融投诉数据的流式分析\n与异常线索发现'.replace('\n','<br/>'),TITLE)
 p('报告1  问题与计算原型',H2)
-p(f'团队及成员：待填写　　阶段：1　　编制日期：2026年10月12日<br/>仓库URL：待填写　　代码：{commit}　　草稿标签：phase-1-draft',SMALL)
+p(f'团队及成员：待填写　　阶段：1　　更新日期：2026-10-13<br/>仓库URL：<link href="{REPO_URL}" color="#1F4365">{REPO_URL}</link><br/>代码：{commit}　　提交标签：{SUBMISSION_TAG}',SMALL)
 h('执行摘要')
 p('本项目面向需要分析大规模金融投诉数据的学生与研究人员，拟构建可在普通计算机上运行的Python分析系统。阶段一完成了CSV流式解析、质量诊断、分类与时间汇总、统计口径说明和自动化测试，并在老师提供的约8.93 GB文件上执行全量验证。程序处理16,545,376条记录，20项测试全部通过。初步结果显示投诉集中于征信相关类别，且文本覆盖和回应结果存在明显年份差异。当前仅形成描述性证据，不能据此推断企业责任或服务质量。下一阶段将完善数据字典与评估方案，再比较异常线索识别方法。')
 h('1 问题定义与申请批准的范围')
@@ -121,7 +126,7 @@ table('表3 无效或边界输入的处理',['输入情况','原型行为'],[
 
 # Main text page 4
 page();h('5 真实文件运行与初步观察')
-p('以下数字来自本次完整文件运行，未以合成数据替代。合成数据仅用于测试。源文件包含16个字段，收件时间为2011年12月1日至2026年7月5日。统计单位为投诉记录。')
+p('以下数字来自2026年10月12日的完整文件运行。合成数据仅用于测试。源文件包含16个字段，收件时间为2011年12月1日至2026年7月5日。统计单位为投诉记录。')
 table('表4 全量运行的主要数据与质量结果',['指标','结果'],[
 ('文件字节数及记录数',f'{r["source"]["bytes"]:,}字节；{N:,}条'),
 ('非空数值ID及重复额外记录',f'{r["quality"]["unique_numeric_ids"]:,}个；{r["quality"]["duplicate_id_extra_rows"]}条'),
@@ -153,7 +158,7 @@ table('表5 自动化测试覆盖（合计20项）',['测试组','项数','主�
 p('20项测试全部通过。用例中刻意构造的坏输入用于验证失败处理，不代表真实文件发生解析失败。合成示例包含12条记录，其中9条及时回应、6条有叙述、3条金钱救济；输出与人工预期一致。')
 p(f'真实运行包含{len(r["checks"])}项内部对账，全部通过。另将本程序与先前独立的pandas分块预分析比较，记录总数、缺失、日期范围、主要频数、交叉表和ID诊断共{len(comparison["checks"])}项控制均一致。这比仅检查“程序没有报错”提供了更强的正确性证据。')
 peak=run.get('peak_process_memory_bytes')
-table('表6 本机单次运行的资源证据',['项目','实测或说明'],[
+table('表6 2026-10-12本机单次全量运行的资源证据',['项目','实测或说明'],[
 ('环境',f'Windows；AMD Ryzen 9 7945HX；Python {run["python"]}。'),
 ('全量扫描耗时',f'{run["elapsed_seconds"]:.1f}秒（约{run["elapsed_seconds"]/60:.2f}分钟）。'),
 ('扫描结束前进程峰值内存',f'{peak/1024**2:.2f} MiB；操作系统工作集口径。' if peak else '当前操作系统未返回测量。'),
@@ -166,7 +171,7 @@ page();h('7 创新思路及其证据边界')
 p('<b>程序层面的改进目标：</b>整合流式统计、精确ID诊断、总量对账、完整性标记及指标分母，使大文件分析结果可检查。以上技术分别已有成熟做法；本项目的贡献定位为面向该数据的可复现集成与验证，不声称算法首创。')
 p('<b>数据层面的研究问题：</b>限制为有文本记录时，产品和企业的回应结果分布、异常月份排序是否改变？阶段五拟在同一时期与分类口径下比较全部记录与有文本子样本，并检查调整可观测构成后的差异。尚未完成该检验，不把方向写成已证实的创新发现。')
 h('8 风险控制与阶段二至五计划')
-p('主要风险包括历史分类断点、未完整月份、文本公开的选择偏差及企业回应标签的解释偏差。采用原标签保留、稳定口径子集、完整月份筛选与敏感性分析。异常线索仅供人工复核，不能当作违规事实；公司比较缺少客户量分母。原始叙述不上传，公开仓库只含合成样本和聚合证据。')
+p('主要风险包括历史分类断点、未完整月份、文本公开的选择偏差及企业回应标签的解释偏差。采用原标签保留、稳定口径子集、完整月份筛选与敏感性分析。异常线索仅供人工复核，不能当作违规事实；公司比较缺少客户量分母。原始叙述不上传，仓库只含合成样本和聚合证据。')
 table('表7 累积阶段计划及验收条件',['阶段与时间','工作及验收条件','负责人角色'],[
 ('阶段2\n第6节课结束','数据字典与类别断点；确定完整月份、时间划分、指标与规则基线；固定数据版本。','数据负责人\n姓名待定'),
 ('阶段3\n第10节课结束','比较滚动中位数/MAD、可解释统计模型和Isolation Forest；同一时间划分、误报分析、至少一项消融。','建模负责人\n姓名待定'),
@@ -174,7 +179,7 @@ table('表7 累积阶段计划及验收条件',['阶段与时间','工作及验�
 ('阶段5\n第16节课结束','受控评估文本覆盖/分类断点提示扩展；敏感性、监控与回滚计划；汇总教师反馈。','评估与写作\n姓名待定')],[78,326,78])
 p('阶段三拟在稳定口径的产品月度序列上识别异常线索。训练、验证、测试按时间分开，特征只使用当期及历史信息；具体切分在阶段二固定。若没有真实异常标签，可做预先规定的异常注入与人工复核，但不能将注入识别率冒充真实异常识别准确率。性能达不到基线时保留负结果并收缩范围。',SMALL)
 h('9 个人贡献与AI辅助说明')
-p('团队与个人分工尚未确定，提交前由成员填写实际贡献。本版本代码、测试及文字由Codex辅助生成，本地运行由助手工具完成；尚不代表学生已独立复现或掌握。学生需记录亲自完成的阅读、修改、复现与解释工作。首次阶段报告无上一阶段教师反馈，后续逐条记录回应。',SMALL)
+p('成员姓名与分工待填写。代码、测试和稿件由Codex辅助生成，全量执行由助手工具完成。2026年10月13日，学生亲自在PyCharm的.venv中运行20项测试，全部通过，耗时0.446秒，退出代码0；依据学生提供的控制台记录，不代表独立编写或已亲自全量运行。首次报告无上一阶段反馈，后续记录实际贡献及教师反馈回应。',SMALL)
 
 # References and appendix are outside the six-page main text.
 page();h('参考文献')
@@ -189,7 +194,7 @@ for label,url in references:
     p(html.escape(label),SMALL);p(f'<link href="{url}" color="#1F4365">{html.escape(url)}</link>',SMALL)
 h('附录A 版本与提交信息')
 p(f'源文件SHA-256：<br/>{fingerprint["sha256"][:32]}<br/>{fingerprint["sha256"][32:]}',SMALL)
-p(f'本地代码commit：{commit}。当前草稿标签为phase-1-draft；仓库URL、团队名称、成员和实际提交日期待补充。学生复现并修改后，应创建指导要求的phase-1-submission标签，报告中同步更新commit/tag。原始约8.93 GB数据不纳入代码包。',SMALL)
+p(f'仓库：<link href="{REPO_URL}" color="#1F4365">{REPO_URL}</link><br/>固定版本：<link href="{REPO_URL}/tree/{SUBMISSION_TAG}" color="#1F4365">{SUBMISSION_TAG}</link>；commit：{commit}。须邀请教师并由其接受后才能访问；团队名称、成员和实际提交日期待填写。原始约8.93 GB数据不纳入代码包。',SMALL)
 p('证据位置：evidence/full_run.json、reference_control.json、reference_comparison.json、source_fingerprint.json及test_results.txt。统计源于教师文件，不用在线数据库替换。课程要求依据《作业指导》第1–4、15、21及26页；报告主文为前6页，参考文献及本附录不计入主文页数。',SMALL)
 p('本阶段申请批准：以整份投诉CSV的可复现分析程序为基础，后续在稳定口径的月度聚合上研究异常线索识别，并把文本样本偏差作为受控扩展。是否采用该后续AI路线，需由教师在问题与范围审批中确认。',SMALL)
 
