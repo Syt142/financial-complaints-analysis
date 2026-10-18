@@ -1,6 +1,6 @@
 # 核验与复现记录
 
-本记录区分助手工具运行与学生本人复现，不把不同批次的耗时合并。更新日期为 2026-10-18。团队成员为孙永滔、束琪遇；职责与已确认贡献分别记载于 [团队分工与贡献记录](team_contributions.md)。
+本记录区分助手工具运行与学生本人复现，不把不同批次的耗时合并。更新日期为 2026-10-19。团队成员为孙永滔、束琪遇；职责与已确认贡献分别记载于 [团队分工与贡献记录](team_contributions.md)。
 
 远程仓库：[Syt142/financial-complaints-analysis](https://github.com/Syt142/financial-complaints-analysis)，通过 PyCharm 创建为私有仓库并完成首次推送；该次 `main` 提交号为 `1eadd990bd810128eb236c2711c6d959aaae7797`。首次推送记录不等于最终提交版本，报告一正式代码以 [`phase-1-submission` 标签](https://github.com/Syt142/financial-complaints-analysis/tree/phase-1-submission) 及其对应提交号为准。
 
@@ -20,7 +20,26 @@
 - `evidence/reference_control.json` 与 `reference_comparison.json`：独立 pandas 分析的控制值及 31 项比对通过记录。
 - `evidence/test_results.txt`：助手初始执行 20 项测试的日志（0.468 秒），与学生后续的 0.446 秒记录是不同批次。
 - `evidence/source_fingerprint.json`：原始文件大小及 SHA-256，便于持有老师数据的复现者确认输入版本。
-- `evidence/manifest.json`：上述选定证据的 SHA-256 清单。本次整理前只读检查 9 项全部匹配；原文件保持不变。
+- `evidence/manifest.json`：上述 9 项选定证据的 SHA-256 清单。此前“9 项全部匹配”仅针对本机原始 CRLF 文件；旧 Git 提交及其源码归档采用 LF 字节，不能沿用该结论，详见下节。
+
+## 2026-10-19 交付完整性修复与历史版本边界
+
+按提交前批阅重新检查 `5ed1544d198870a4fcc7af41557895d08d865d78`：本机 9 个证据文件均符合原清单，但该提交保存的 9 个 Git blob 均不符合清单；逐项比较表明，差异完全来自 CRLF 被 Git 转换为 LF，统计内容未变。这是旧源码归档的字节完整性缺陷，不能用本地检查通过代替归档检查。
+
+修复保留证据和清单的原始字节，新增 `.gitattributes` 的 `evidence/** -text` 规则，并在最终提交时将本机原始证据重新纳入版本。新增标准库脚本 `scripts/verify_evidence.py`，可从新检出目录或源码归档逐项检查；预期为 `9/9 passed`。2026-10-19 助手在本机运行该脚本，9 项全部通过、退出码 0；在临时副本的 `analysis.md` 末尾追加一个字节后，8 项通过、1 项失败、退出码 1，原证据未改动。该核验仅证明文件与随包清单一致，不证明清单来源、历史执行者或统计方法无误。
+
+全量分析可用 `python -m complaints_analyzer "PATH_TO_COMPLAINTS.csv" --outdir results/full --batch-size 500000` 重跑，历史聚合结果另存为 `evidence/full_run.json`；独立参考结果和输入指纹分别见 `evidence/reference_control.json`、`evidence/source_fingerprint.json`。输入 SHA-256 为 `ee76ed0a27d33732d3c292de7902fd7a3fb9b07eb93ba3f69894f556dbd096c1`。当时的运行记录未直接写入 Git 提交号，因此只能说明这些历史产物由当前提交保存，不能断言当前提交号就是历史运行的代码版本。学生提供的 0.446 秒日志也未记录提交号，应保留这一追溯限制；不倒填历史版本，也不以本次核验耗时替换历史的 0.468、0.446 或 358.075 秒。
+
+## 2026-10-19 源码归档复现检查
+
+助手从修复后的 Git 暂存树导出 ZIP，在新的解压目录中使用 Python 3.12.14 执行核验，不使用原项目的虚拟环境或未跟踪文件：
+
+- 证据 SHA-256：9/9 通过。
+- 自动测试：20/20 通过，耗时 0.317 秒，退出码 0。这是本轮助手执行记录，不替换学生的 0.446 秒记录。
+- 合成样例：12 条记录、9 条及时回应、6 条有文本、3 条金钱救济；内部对账通过。
+- 历史全量聚合与保存的参考控制值：31/31 比较通过。本轮没有重新扫描原始大文件。
+
+本轮仅修正证据的 Git 字节保存规则、增加核验入口并润色报告；核心分析模块、原始统计值和历史清单保持不变。最终交付归档还需保持相同的证据字节及核心程序，以维持上述核验结论。
 
 ## 孙永滔提供的测试日志摘要
 

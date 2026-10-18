@@ -14,6 +14,7 @@
 git clone https://github.com/Syt142/financial-complaints-analysis.git
 cd financial-complaints-analysis
 git checkout phase-1-submission
+python scripts/verify_evidence.py
 python -m unittest discover -s tests -v
 python -m complaints_analyzer data/synthetic_complaints.csv --outdir results/demo
 ```
@@ -30,12 +31,15 @@ python -m complaints_analyzer data/synthetic_complaints.csv --outdir results/dem
 ## 最短复现路径
 
 ```powershell
+python scripts/verify_evidence.py
 python -m unittest discover -s tests -v
 python scripts/make_demo.py
 python -m complaints_analyzer data/synthetic_complaints.csv --outdir results/demo
 ```
 
 合成示例应有 12 条记录、9 条及时回应、6 条有文本、3 条金钱救济。示例文本明确写着 SYNTHETIC，不能用作真实实验数据。
+
+证据校验预期输出 `Evidence SHA-256: 9/9 passed`；缺失、改动或清单错误均以非零退出码结束。`.gitattributes` 对 `evidence/**` 禁用 Git 换行转换，保留历史原始字节。该检查验证随包文件与清单一致，不能替代重扫原始数据或认证历史执行者。历史运行未直接记录 Git 提交号，不能把本次提交号倒填为当时的执行版本；具体批次及修复说明见 [核验与复现记录](docs/verification_records.md)。
 
 ## 分析老师的真实文件
 
@@ -81,6 +85,7 @@ python scripts/build_report.py --output-dir reports
 - `tests/test_analyzer.py`：20项单元和端到端测试。
 - `scripts/make_demo.py`：可重复生成合成输入。
 - `scripts/verify_reference.py`：将当前结果与独立 pandas 预分析的控制值对照。
+- `scripts/verify_evidence.py`：逐项核验 `evidence/manifest.json` 保存的 SHA-256。
 
 ## 关键口径
 
