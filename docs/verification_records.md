@@ -1,6 +1,6 @@
 # 核验与复现记录
 
-本记录区分助手工具运行与学生本人复现，不把不同批次的耗时合并。更新日期为 2026-10-18。团队为孙永滔、束琪遇组，孙永滔担任主负责人，束琪遇为协作成员；职责与已确认贡献分别记载于 [团队分工与贡献记录](team_contributions.md)。
+本记录区分助手工具运行与学生本人复现，不把不同批次的耗时合并。更新日期为 2026-10-18。团队成员为孙永滔、束琪遇；职责与已确认贡献分别记载于 [团队分工与贡献记录](team_contributions.md)。
 
 远程仓库：[Syt142/financial-complaints-analysis](https://github.com/Syt142/financial-complaints-analysis)，通过 PyCharm 创建为私有仓库并完成首次推送；该次 `main` 提交号为 `1eadd990bd810128eb236c2711c6d959aaae7797`。首次推送记录不等于最终提交版本，报告一正式代码以 [`phase-1-submission` 标签](https://github.com/Syt142/financial-complaints-analysis/tree/phase-1-submission) 及其对应提交号为准。
 
