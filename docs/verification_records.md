@@ -1,16 +1,16 @@
 # 核验与复现记录
 
-本记录区分助手工具运行与学生本人复现，不把不同批次的耗时合并。记录整理日期为 2026-10-13。团队名称、成员及实际分工待填写。
+本记录区分助手工具运行与学生本人复现，不把不同批次的耗时合并。更新日期为 2026-10-18。团队为孙永滔、束琪遇组，孙永滔担任主负责人，束琪遇为协作成员；职责与已确认贡献分别记载于 [团队分工与贡献记录](team_contributions.md)。
 
 远程仓库：[Syt142/financial-complaints-analysis](https://github.com/Syt142/financial-complaints-analysis)，通过 PyCharm 创建为私有仓库并完成首次推送；该次 `main` 提交号为 `1eadd990bd810128eb236c2711c6d959aaae7797`。首次推送记录不等于最终提交版本，报告一正式代码以 [`phase-1-submission` 标签](https://github.com/Syt142/financial-complaints-analysis/tree/phase-1-submission) 及其对应提交号为准。
 
-教师需被邀请为协作者并使用受邀的 GitHub 账号接受邀请后，才能查看或克隆私有仓库；此处仅说明访问条件，不表示邀请已发送或已接受。复现命令见项目根目录 `README.md`。
+2026-10-18，按团队要求将仓库改为公开，教师可直接访问和克隆，无需协作者邀请。上段保留首次建仓时的历史状态。本次补齐团队信息后同步 `phase-1-submission` 标签，并保留此前快照；正式报告所列提交号用于核对本次版本。复现命令见项目根目录 `README.md`。
 
 | 批次 | 执行者与证据来源 | 结果与范围 |
 | --- | --- | --- |
 | 初始全量分析 | Codex 助手通过本机工具执行；聚合结果保存在 `evidence/full_run.json` | 16,545,376 条记录，`complete_file=true`，耗时 358.075 秒。随包保存的历史证据，不改写为学生亲自执行。 |
 | 后续全量复算 | Codex 助手操作；本机结果位于 `results/full/summary.json` | 16,545,376 条记录，`complete_file=true`，耗时 304.465 秒。`results/` 被 Git 忽略，此批结果不随仓库分发，也不替换上述历史证据。 |
-| 学生在 PyCharm 复现自动测试 | 学生本人运行并在对话中提供控制台日志 | 使用项目 `.venv/Scripts/python.exe` 执行 `-m unittest discover -s tests -v`；20 项测试全部通过，耗时 0.446 秒，进程退出代码 0。日志不含 Python 版本，故本条不据此声明版本。 |
+| 2026-10-13 孙永滔在 PyCharm 复现自动测试 | 孙永滔本人运行并在对话中提供控制台日志 | 使用项目 `.venv/Scripts/python.exe` 执行 `-m unittest discover -s tests -v`；20 项测试全部通过，耗时 0.446 秒，进程退出代码 0。日志不含 Python 版本，故本条不据此声明版本。 |
 
 两次全量运行的耗时不同，不能仅凭两次运行判定程序性能发生改进；这里仅如实记录各批测量值。
 
@@ -22,9 +22,9 @@
 - `evidence/source_fingerprint.json`：原始文件大小及 SHA-256，便于持有老师数据的复现者确认输入版本。
 - `evidence/manifest.json`：上述选定证据的 SHA-256 清单。本次整理前只读检查 9 项全部匹配；原文件保持不变。
 
-## 学生提供的测试日志摘要
+## 孙永滔提供的测试日志摘要
 
-以下内容摘录自学生在对话中贴出的 PyCharm 控制台输出，便于说明复现来源；不是助手重新运行后生成的日志。原输出中 20 个具名测试均显示 `ok`。
+以下内容摘录自孙永滔在对话中贴出的 PyCharm 控制台输出，便于说明复现来源；不是助手重新运行后生成的日志。原输出中 20 个具名测试均显示 `ok`。
 
 ```text
 E:\Gpt\2026-10-12\fen\outputs\phase1_project\.venv\Scripts\python.exe -m unittest discover -s tests -v

@@ -4,11 +4,11 @@
 
 ## 仓库与阶段一提交版本
 
-仓库地址：[Syt142/financial-complaints-analysis](https://github.com/Syt142/financial-complaints-analysis)。这是私有仓库；教师需使用自己的 GitHub 账号接受协作者邀请后才能查看和克隆。仓库地址本身不会授予访问权限，本说明不表示已发送或接受邀请。
+仓库地址：[Syt142/financial-complaints-analysis](https://github.com/Syt142/financial-complaints-analysis)。仓库于 2026-10-13 以私有方式创建，2026-10-18 按团队要求改为公开，教师可直接查看和克隆，无需协作者邀请。
 
-阶段一正式代码版本使用 [`phase-1-submission` 标签](https://github.com/Syt142/financial-complaints-analysis/tree/phase-1-submission)。提交报告引用该标签及其对应的提交号，后续开发继续在 `main` 上进行，不移动提交标签。
+阶段一正式代码版本使用 [`phase-1-submission` 标签](https://github.com/Syt142/financial-complaints-analysis/tree/phase-1-submission)。本次提交前补齐团队信息并同步标签，原版本另行保留。报告引用本版标签及其对应的提交号；提交后冻结该版本，后续开发继续在 `main` 上进行。
 
-教师获得权限后，可执行：
+教师可直接执行：
 
 ```powershell
 git clone https://github.com/Syt142/financial-complaints-analysis.git
@@ -109,8 +109,15 @@ python scripts/build_report.py --output-dir reports
 
 ## 归属与AI辅助披露
 
-本代码、报告初稿和测试由 Codex AI 助手辅助生成；初始全量分析、后续全量复算及相应核验由助手工具执行。学生已在 PyCharm 中使用项目 `.venv` 的 Python 解释器运行 `python -m unittest discover -s tests -v`，用户提供的控制台日志显示：20 项测试全部通过，耗时 0.446 秒，进程退出代码为 0。这条记录确认了学生的测试复现，不代表学生已亲自完成全量分析或独立编写全部代码。分批记录与证据范围见 [核验与复现记录](docs/verification_records.md)。
+团队名称：**孙永滔、束琪遇组**。主负责人为孙永滔，协作成员为束琪遇，分工更新于 2026-10-18。
 
-团队名称、成员及真实个人分工尚待填写；远程仓库地址与正式提交版本约定见上文。不得把助手工具执行虚构为学生已亲自完成的实验。提交前每位成员应能说明其实际修改、测试、理解与验证内容。
+| 成员 | 责任安排 |
+| --- | --- |
+| 孙永滔（主负责人） | 统筹问题与范围、技术方案、程序开发与测试验收、结果解释及报告定稿；主导后续建模、系统集成和评估。 |
+| 束琪遇（协作成员） | 协助数据口径与聚合结果复核、资料整理、测试用例补充、报告校对；后续协助数据复核、方法比较结果核对与系统测试。 |
+
+本代码、报告初稿和测试由 Codex AI 助手辅助生成；初始全量分析、后续全量复算及相应核验由助手工具执行。孙永滔主导对话中的需求确认，并于 2026-10-13 在 PyCharm 中使用项目 `.venv` 的 Python 解释器运行 `python -m unittest discover -s tests -v`。其提供的控制台日志显示：20 项测试全部通过，耗时 0.446 秒，进程退出代码为 0。这条记录确认了孙永滔的测试复现，不代表其已亲自完成全量分析或独立编写全部代码。束琪遇的独立执行记录尚未提供，上表列明的是责任安排，不作为已完成实验或代码贡献的证明。
+
+分工及证据边界见 [团队分工与贡献记录](docs/team_contributions.md)；不同批次的运行记录见 [核验与复现记录](docs/verification_records.md)。后续按实际提交、日志与复核记录补充贡献，不把助手工具执行记为成员亲自执行。
 
 外部数据：老师提供的 CFPB 风格投诉数据；定义参考 CFPB 官方页面。未复制第三方项目代码；核心调用 Python 标准库。原始数据的取得范围、版本及使用许可需由团队依据老师说明补充。无论仓库是否公开，仅提交代码、合成样本、说明与聚合证据，不上传原始投诉文件。

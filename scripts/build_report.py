@@ -57,7 +57,7 @@ def page():story.append(PageBreak());md.append('\n---\n')
 def table(caption,headers,rows,widths):
     p(caption,CAP)
     data=[[Paragraph(html.escape(str(v)),SMALL) for v in headers]]
-    data += [[Paragraph(html.escape(str(v)),SMALL) for v in row] for row in rows]
+    data += [[Paragraph(html.escape(str(v)).replace('\n','<br/>'),SMALL) for v in row] for row in rows]
     t=Table(data,colWidths=widths,repeatRows=1,hAlign='LEFT')
     t.setStyle(TableStyle([('BACKGROUND',(0,0),(-1,0),colors.HexColor('#E8EDF1')),
         ('VALIGN',(0,0),(-1,-1),'MIDDLE'),('GRID',(0,0),(-1,-1),.45,colors.HexColor('#D9D9D9')),
@@ -73,7 +73,7 @@ def pct(n,d=N):return f'{100*n/d:.2f}%' if d else '不可计算'
 # Main text page 1
 p('大规模金融投诉数据的流式分析\n与异常线索发现'.replace('\n','<br/>'),TITLE)
 p('报告1  问题与计算原型',H2)
-p(f'团队及成员：待填写　　阶段：1　　更新日期：2026-10-13<br/>仓库URL：<link href="{REPO_URL}" color="#1F4365">{REPO_URL}</link><br/>代码：{commit}　　提交标签：{SUBMISSION_TAG}',SMALL)
+p(f'团队：孙永滔、束琪遇组　　阶段：1　　更新日期：2026-10-18<br/>主负责人：孙永滔　　协作成员：束琪遇<br/>仓库URL：<link href="{REPO_URL}" color="#1F4365">{REPO_URL}</link><br/>代码：{commit}　　提交标签：{SUBMISSION_TAG}',SMALL)
 h('执行摘要')
 p('本项目面向需要分析大规模金融投诉数据的学生与研究人员，拟构建可在普通计算机上运行的Python分析系统。阶段一完成了CSV流式解析、质量诊断、分类与时间汇总、统计口径说明和自动化测试，并在老师提供的约8.93 GB文件上执行全量验证。程序处理16,545,376条记录，20项测试全部通过。初步结果显示投诉集中于征信相关类别，且文本覆盖和回应结果存在明显年份差异。当前仅形成描述性证据，不能据此推断企业责任或服务质量。下一阶段将完善数据字典与评估方案，再比较异常线索识别方法。')
 h('1 问题定义与申请批准的范围')
@@ -173,13 +173,13 @@ p('<b>数据层面的研究问题：</b>限制为有文本记录时，产品和�
 h('8 风险控制与阶段二至五计划')
 p('主要风险包括历史分类断点、未完整月份、文本公开的选择偏差及企业回应标签的解释偏差。采用原标签保留、稳定口径子集、完整月份筛选与敏感性分析。异常线索仅供人工复核，不能当作违规事实；公司比较缺少客户量分母。原始叙述不上传，仓库只含合成样本和聚合证据。')
 table('表7 累积阶段计划及验收条件',['阶段与时间','工作及验收条件','负责人角色'],[
-('阶段2\n第6节课结束','数据字典与类别断点；确定完整月份、时间划分、指标与规则基线；固定数据版本。','数据负责人\n姓名待定'),
-('阶段3\n第10节课结束','比较滚动中位数/MAD、可解释统计模型和Isolation Forest；同一时间划分、误报分析、至少一项消融。','建模负责人\n姓名待定'),
-('阶段4\n第13节课结束','集成输入、统计、检测、报告；正常/困难/失败三类演示；端到端与延迟测试。','系统负责人\n姓名待定'),
-('阶段5\n第16节课结束','受控评估文本覆盖/分类断点提示扩展；敏感性、监控与回滚计划；汇总教师反馈。','评估与写作\n姓名待定')],[78,326,78])
+('阶段2\n第6节课结束','数据字典与类别断点；确定完整月份、时间划分、指标与规则基线；固定数据版本。','孙永滔主导\n束琪遇复核'),
+('阶段3\n第10节课结束','比较滚动中位数/MAD、可解释统计模型和Isolation Forest；同一时间划分、误报分析、至少一项消融。','孙永滔建模\n束琪遇核对'),
+('阶段4\n第13节课结束','集成输入、统计、检测、报告；正常/困难/失败三类演示；端到端与延迟测试。','孙永滔集成\n束琪遇测试'),
+('阶段5\n第16节课结束','受控评估文本覆盖/分类断点提示扩展；敏感性、监控与回滚计划；汇总教师反馈。','孙永滔定稿\n束琪遇校对')],[78,326,78])
 p('阶段三拟在稳定口径的产品月度序列上识别异常线索。训练、验证、测试按时间分开，特征只使用当期及历史信息；具体切分在阶段二固定。若没有真实异常标签，可做预先规定的异常注入与人工复核，但不能将注入识别率冒充真实异常识别准确率。性能达不到基线时保留负结果并收缩范围。',SMALL)
 h('9 个人贡献与AI辅助说明')
-p('成员姓名与分工待填写。代码、测试和稿件由Codex辅助生成，全量执行由助手工具完成。2026年10月13日，学生亲自在PyCharm的.venv中运行20项测试，全部通过，耗时0.446秒，退出代码0；依据学生提供的控制台记录，不代表独立编写或已亲自全量运行。首次报告无上一阶段反馈，后续记录实际贡献及教师反馈回应。',SMALL)
+p('职责安排：孙永滔主负责问题与范围、技术方案、开发验收、结果解释及报告定稿；束琪遇协助数据口径与结果复核、资料整理、测试补充及校对。已确认：孙永滔主导需求确认，10月13日在PyCharm中复现20项测试，0.446秒通过、退出代码0（本人提供日志）。束琪遇的执行记录尚未提供，以上为职责安排。代码、测试及稿件初稿由Codex辅助生成，全量分析由助手工具执行。首次报告无上一阶段反馈。',SMALL)
 
 # References and appendix are outside the six-page main text.
 page();h('参考文献')
@@ -194,7 +194,7 @@ for label,url in references:
     p(html.escape(label),SMALL);p(f'<link href="{url}" color="#1F4365">{html.escape(url)}</link>',SMALL)
 h('附录A 版本与提交信息')
 p(f'源文件SHA-256：<br/>{fingerprint["sha256"][:32]}<br/>{fingerprint["sha256"][32:]}',SMALL)
-p(f'仓库：<link href="{REPO_URL}" color="#1F4365">{REPO_URL}</link><br/>固定版本：<link href="{REPO_URL}/tree/{SUBMISSION_TAG}" color="#1F4365">{SUBMISSION_TAG}</link>；commit：{commit}。须邀请教师并由其接受后才能访问；团队名称、成员和实际提交日期待填写。原始约8.93 GB数据不纳入代码包。',SMALL)
+p(f'公开仓库：<link href="{REPO_URL}" color="#1F4365">{REPO_URL}</link><br/>固定版本：<link href="{REPO_URL}/tree/{SUBMISSION_TAG}" color="#1F4365">{SUBMISSION_TAG}</link>；commit：{commit}。教师可直接访问。团队：孙永滔、束琪遇组；主负责人孙永滔，协作成员束琪遇。本版更新于2026年10月18日；原始约8.93 GB数据不纳入代码包。',SMALL)
 p('证据位置：evidence/full_run.json、reference_control.json、reference_comparison.json、source_fingerprint.json及test_results.txt。统计源于教师文件，不用在线数据库替换。课程要求依据《作业指导》第1–4、15、21及26页；报告主文为前6页，参考文献及本附录不计入主文页数。',SMALL)
 p('本阶段申请批准：以整份投诉CSV的可复现分析程序为基础，后续在稳定口径的月度聚合上研究异常线索识别，并把文本样本偏差作为受控扩展。是否采用该后续AI路线，需由教师在问题与范围审批中确认。',SMALL)
 
@@ -204,9 +204,9 @@ def footer(canvas,doc):
     canvas.drawRightString(A4[0]-56.7,30,str(doc.page))
     canvas.restoreState()
 args.output_dir.mkdir(parents=True,exist_ok=True)
-pdf=args.output_dir/'teamname_phase1_report.pdf'
+pdf=args.output_dir/'孙永滔_束琪遇_phase1_report.pdf'
 doc=SimpleDocTemplate(str(pdf),pagesize=A4,rightMargin=56.7,leftMargin=56.7,
-    topMargin=56.7,bottomMargin=56.7,title='大规模金融投诉数据的流式分析与异常线索发现',author='团队待填写；AI辅助草稿')
+    topMargin=56.7,bottomMargin=56.7,title='大规模金融投诉数据的流式分析与异常线索发现',author='孙永滔、束琪遇')
 doc.build(story,onFirstPage=footer,onLaterPages=footer)
 (args.output_dir/'报告1_可编辑稿.md').write_text('\n\n'.join(md)+'\n',encoding='utf-8')
 print(pdf)
