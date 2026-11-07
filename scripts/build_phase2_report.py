@@ -1,9 +1,10 @@
-"""Build the cumulative phase-2 paper (6 body pages + references/appendices)."""
+"""Build the cumulative article, editable Markdown, and the validation figure."""
 import argparse
 import csv
 import html
 import inspect
 import json
+import math
 from pathlib import Path
 import re
 import subprocess
@@ -15,8 +16,8 @@ from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.enums import TA_CENTER
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Preformatted
-from reportlab.graphics.shapes import Drawing, Line, Circle, String, Rect, PolyLine
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Preformatted, CondPageBreak, KeepTogether
+from reportlab.graphics.shapes import Drawing, Line, Circle, String, PolyLine
 from reportlab.graphics import renderSVG
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,8 +32,6 @@ args = parser.parse_args()
 args.output_dir.mkdir(parents=True, exist_ok=True)
 E = ROOT / 'evidence_phase2'
 M = json.loads((E/'metrics.json').read_text(encoding='utf-8'))
-F = json.loads((ROOT/'evidence/full_run.json').read_text(encoding='utf-8'))
-C = M['config']
 PROMPTS = json.loads((ROOT/'docs/phase2_prompts.json').read_text(encoding='utf-8'))
 def read_csv(name):
     with (E/name).open(encoding='utf-8-sig', newline='') as f:
@@ -48,13 +47,19 @@ pdfmetrics.registerFont(TTFont('CN2', args.font_regular))
 pdfmetrics.registerFont(TTFont('CN2B', args.font_bold))
 pdfmetrics.registerFontFamily('CN2', normal='CN2',bold='CN2B',italic='CN2',boldItalic='CN2B')
 W = A4[0]-2*56.7-12
-body = ParagraphStyle('Body2',fontName='CN2',fontSize=10.5,leading=12.075,spaceAfter=7,wordWrap='CJK',rightIndent=8)
-small = ParagraphStyle('Small2',parent=body,fontSize=10,leading=11.5,spaceAfter=5)
-cell = ParagraphStyle('Cell2',parent=small,rightIndent=0)
-title = ParagraphStyle('Title2',parent=body,fontName='CN2B',fontSize=18,leading=24,alignment=TA_CENTER,spaceAfter=8)
-head = ParagraphStyle('Head2',parent=body,fontName='CN2B',fontSize=13,leading=17,spaceBefore=7,spaceAfter=7,keepWithNext=True)
-cap = ParagraphStyle('Cap2',parent=small,fontName='CN2B',keepWithNext=True,spaceBefore=4)
-mono = ParagraphStyle('Code2',fontName='Courier',fontSize=10,leading=11.5,spaceAfter=7)
+body = ParagraphStyle('Text', fontName='CN2', fontSize=11, leading=12.65,
+                      firstLineIndent=22, wordWrap='CJK', rightIndent=7, spaceAfter=4)
+small = ParagraphStyle('Note', parent=body, firstLineIndent=0, fontSize=10, leading=11.5)
+cell = ParagraphStyle('Cell', parent=small, rightIndent=0, spaceAfter=0)
+title = ParagraphStyle('Title', parent=small, fontName='CN2B', fontSize=18.5, leading=24,
+                       alignment=TA_CENTER, rightIndent=0, spaceAfter=4)
+head = ParagraphStyle('Section', parent=small, fontName='CN2B', fontSize=13, leading=16,
+                      spaceBefore=8, spaceAfter=4, keepWithNext=True)
+subhead = ParagraphStyle('Subsection', parent=head, fontSize=11, leading=13, spaceBefore=4)
+cap = ParagraphStyle('Caption', parent=small, alignment=TA_CENTER, fontName='CN2B',
+                     rightIndent=0, keepWithNext=True, spaceBefore=4, spaceAfter=3)
+mono = ParagraphStyle('Code',fontName='Courier',fontSize=10,leading=11.5,spaceAfter=4)
+
 story, md = [], []
 def p(text, style=body):
     story.append(Paragraph(text,style))
@@ -62,18 +67,24 @@ def p(text, style=body):
     md.append(clean.replace('<b>','**').replace('</b>','**').replace('<br/>','\n'))
 def h(text):
     p(text,head);md[-1]='## '+md[-1]
+def sub(text):
+    p(text,subhead);md[-1]='### '+md[-1]
 def page():
     story.append(PageBreak());md.append('\n---\n')
-def table(label, headers, rows, widths):
-    p(label,cap)
+def table(label, headers, rows, widths, *, long_table=False):
+    if long_table:
+        story.append(CondPageBreak(150))
+        p(label, ParagraphStyle('LongTableCaption', parent=cap, keepWithNext=False))
+    else:
+        p(label, cap)
     allrows=[headers]+rows
     data=[[Paragraph(html.escape(str(v)).replace('\n','<br/>'),cell) for v in row] for row in allrows]
     t=Table(data,colWidths=[W*x/sum(widths) for x in widths],repeatRows=1,hAlign='LEFT')
-    t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND',(0,0),(-1,0),colors.HexColor('#ECEFF1')),
+    t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('LINEABOVE',(0,0),(-1,0),.9,colors.black),
                           ('LINEBELOW',(0,0),(-1,0),.7,colors.HexColor('#455A64')),
-                          ('LINEBELOW',(0,-1),(-1,-1),.5,colors.HexColor('#455A64')),
+                          ('LINEBELOW',(0,-1),(-1,-1),.8,colors.black),
                           ('LEFTPADDING',(0,0),(-1,-1),5),('RIGHTPADDING',(0,0),(-1,-1),5),
-                          ('TOPPADDING',(0,0),(-1,-1),5),('BOTTOMPADDING',(0,0),(-1,-1),5)]))
+                          ('TOPPADDING',(0,0),(-1,-1),3),('BOTTOMPADDING',(0,0),(-1,-1),3)]))
     story.extend([t,Spacer(1,6)])
     md.append('\n'.join(['| '+' | '.join(headers)+' |','| '+' | '.join(['---']*len(headers))+' |']+
                         ['| '+' | '.join(str(v).replace('\n','<br>') for v in row)+' |' for row in rows]))
@@ -83,168 +94,135 @@ def code(text):
     story.append(Preformatted(text,mono));md.append('```python\n'+text+'\n```')
 def link(path,label=None):
     return f'<link href="{repo}/blob/{commit}/{path}" color="#1F4365">{label or path}</link>'
-names={'Mortgage':'房贷','Student loan':'学生贷款','Debt collection':'债务催收',
-       'Checking or savings account':'支票或储蓄账户','Vehicle loan or lease':'车辆贷款或租赁',
-       'Money transfer, virtual currency, or money service':'汇款相关服务'}
 def pct(x):return f'{x*100:.2f}%'
 
-# 1: title, abstract and cumulative research question
-p('金融产品月度投诉量的异常增长识别研究',title)
-p('基于大规模投诉记录的时间回测',ParagraphStyle('Subtitle',parent=title,fontSize=13,leading=18))
-p('孙永滔　束琪遇',ParagraphStyle('Authors',parent=body,alignment=TA_CENTER))
-p(f'阶段二累积修订稿 · 数据与实验设计 · 2026-11-08<br/>公开仓库：<link href="{repo}">{repo}</link><br/>固定版本：<link href="{VERSION}">{commit[:12]}</link>　标签：phase-2-submission',small)
-h('摘　要')
-p('为支持有限人工复核，本文研究金融产品月度投诉量的异常增长识别。沿用阶段一对约8.93 GB、1,654.54万条投诉的流式处理，构造六类连续原标签的624个产品月，按时间划分并建立过去12个月的中位数/MAD基线。验证期144个候选中取前20；对四档单点增长实施800次配对模拟，增加25%和100%的入选比例分别为47%和95%。32项测试通过。结果仅刻画回顾性排名及模拟敏感性，不代表真实异常准确率；后续将按冻结方案比较模型。')
-p('<b>关键词：</b>金融投诉；月度异常线索；时间回测；大模型辅助编程；可复现评估',small)
-h('1　引言与研究问题')
-p('课程分析者面对长文本、缺失及多年分类变化的大文件，首先需要可靠计数，再决定把有限复核时间花在哪些月份。本文的研究问题是：相对于同一产品此前12个月的自身波动，哪些完整月份的投诉增长应优先核查；简单基线又会遗漏哪些幅度的增长？输入为产品月计数，输出为排名、历史参照及质量提示。')
-p('本文承接报告一的读取、质量诊断及总量对账，增加数据筛选、时间划分、基线与受控实验，并回应“未看见计划研究题目”的教师反馈。阶段一发现2025年同比增量约90.25%来自单个征信原标签，提示不能用全库增长替代产品自身变化；本次据分类连续性缩小范围，而非把所有产品混在一起排序。')
-p('CFPB明确投诉并非消费者经历的随机样本，且保留消费者当时所选产品标签[1]。本文以其字段说明[2]界定观察单位；中位数/MAD及时间窗口采用可解释统计基线，不声称提出新算法。既有投诉公开研究亦提示文本同意机制可能产生选择偏差[4]。本文的学习贡献在于用明确提示词提出反例、约束AI编程并落实为可运行检查，关键交互见第6节和附录B。')
-
-# 2: data and split
-page();h('2　数据来源、范围与探索性分析')
-p('数据为教师提供的CFPB格式快照，含16字段；原始单位是一条投诉，日期范围为2011-12-01至2026-07-05。官方公开数据允许使用和分析[1]，但教师快照的原下载批次、转换过程及额外再分发条件未核实。因此不公开原始文件，仅使用阶段一固定指纹和聚合表。字段字典见附录A。')
-table('表1　沿用阶段一的规模与质量诊断',['项目','数值及其设计含义'],[
- ['原始规模','8,925,381,287字节；16,545,376条；16列'],
- ['ID与产品','ID缺失2,390，重复额外记录0；Product缺失121。先对账，筛选时按原标签排除。'],
- ['日期及叙述','UTC日历日倒置7,054；叙述非空3,814,581条（23.06%）。不以叙述是否公开筛选主样本。'],
- ['范围变化','征信类别存在历史改名与重叠；2026年为不完整年度，均不进主实验。']], [1,3])
-p('表1促成两项设计调整：以六条连续原标签代替征信混合标签；以全体投诉的月度数量代替有文本子样本。它们降低口径混淆，却牺牲覆盖：验证期六类合计452,936条，只占全库同期4,026,336条的'+pct(M['validation_coverage'])+'。覆盖较窄是限制，不能据此概括全库风险。')
-table('表2　冻结的面板与整月划分',['区段','日期范围','产品月数','用途'],[
- ['暖启动','2017-05—2018-04','72','仅建立首个12月窗口'],
- ['开发','2018-05—2022-12','336','调试与规则设定'],
- ['验证','2023-01—2024-12','144','初始结果与模拟实验'],
- ['保留测试','2025-01—2025-12','72','本次仅核验结构；阶段三比较']], [1,1.8,.9,2.1])
-p('六类为房贷、学生贷款、债务催收、支票或储蓄账户、车辆贷款或租赁、汇款相关服务；英文原标签见附录A。104个月×6=624个产品月，表2按同月整体划分。第一阶段已看过2025年度汇总，因此不将其描述为从未接触的数据；本次不生成2025评分或据此选参数。')
-p('主特征仅为历史月计数；产品用于分组，月份用于排序，没有监督学习目标。实际公开日期和历史快照不可得，按收件月回测只能代表事后可见条件，不能证明真实在线提前预警。连续月份也存在自相关；时间划分避免直接看未来，但不会使样本自动独立。')
-
-# 3: method and key code
-page();h('3　处理流水线与可解释基线')
-p('图1将阶段一与本阶段衔接。代码先核验历史证据，再读取month_product，独立核对月表计数与原总量，随后检查选中产品逐月是否存在。缺月停止，显式零保留；不把产品消失自动填为0。原始叙述及个人级邮编、标签、公司信息不进入评分。')
-table('图1　累积的数据处理与分析流程',['阶段一保留','阶段二增补','最终输出'],[
- ['原CSV只读流式解析\n质量与ID诊断\n全量计数及哈希','聚合总量对账\n原标签/月份检查\n历史评分与配对注入','前20候选及历史参照\n分档模拟入选率\n日志、配置与图表']], [1,1,1])
-p('设当前计数为n，历史12月中位数为m，MAD为历史各值到m的绝对偏差中位数；中位数计算使用Python标准库[3]。尺度s=max(1.4826×MAD,1)，得分=max(0,(n-m)/s)。1是以“条”为单位的下限，避免除零；常数1.4826采用常见尺度约定，不构成正态分布假设或显著性检验。得分只衡量向上偏离。')
-p('代码1取自实际'+link('complaints_analyzer/phase2.py','phase2.py')+'的score_point。100条重复12次后变成130条：m=100、MAD=0、s=1、分数30；程序保留尺度触底标记，不能把30解释为概率。真实验证期零MAD候选为'+str(M['zero_mad_count'])+'个。',small)
-source=inspect.getsource(phase2.score_point).splitlines()
-snippet='\n'.join(line[4:] for line in source[source.index('    median = statistics.median(history)'):])
-p('代码1　评分核心及零波动保护',cap);code(snippet)
-p('历史窗口实际采用以下两行；timeline[i-window:i]不含当前月。得分时不使用回应、转交或其他事后字段。源码链接为本稿固定提交，非不可定位的截图。',small)
+# Article front matter and research question
+p('金融产品月度投诉量的异常增长识别研究', title)
+md[-1] = '# ' + md[-1]
+p('——基于大规模投诉记录的时间回测', ParagraphStyle('Subtitle', parent=title, fontSize=13, leading=17))
+p('孙永滔　束琪遇', ParagraphStyle('Authors', parent=title, fontName='CN2', fontSize=11.5, leading=15))
+p(f'阶段二　数据与实验设计　　2026年11月8日　　<link href="{VERSION}" color="#244F70">项目版本 {commit[:12]}</link>',
+  ParagraphStyle('Metadata', parent=small, rightIndent=0, alignment=TA_CENTER, spaceAfter=9))
+p('<b>摘　要　</b>为确定有限复核名额下应优先核查的投诉增长月份，本文利用阶段一从1,654.54万条金融投诉中提取的月度计数，构建六类产品的624个产品月面板。以前12个月计数的中位数与绝对偏差中位数为基线，在144个验证候选中选取20条，并实施800次单点增长模拟。计数增加25%和100%时，入选比例分别为47%和95%。债务催收占真实候选前20名中的7条，部分月份相邻。结果显示该方法对强增长较敏感，温和增长和连续事件仍需进一步评估。',small)
+p('<b>关键词　</b>金融投诉、异常增长、时间回测、滚动中位数、大模型辅助编程',small)
+h('1　引言')
+p('金融投诉量同时受到产品规模、申诉渠道和分类口径的影响。美国消费者金融保护局（CFPB）保留投诉人提交时选择的原始类别，并指出该数据库覆盖主动投诉人群[1–2]。Dou与Roh指出，历史叙述须经同意才能公开，文本子样本可能存在选择偏差[3]。因此，本研究以原产品标签分组，并将有叙述和无叙述的记录一起计数。')
+p('阶段一完成了大文件流式解析和总量核对。在2025年较2024年的投诉增量中，约90.25%来自一个征信产品标签。全库增长率因而很难反映单个产品的历史波动。本文考察两个问题：在只能核查20条线索时，哪些产品月份的增长最突出？向已知月份加入不同幅度的增长，排名方法能识别多少？')
+h('2　数据与方法')
+sub('2.1　数据来源与字段')
+p('教师提供的CFPB格式快照包含8,925,381,287字节、16,545,376条投诉和16个字段，收件日期覆盖2011年12月1日至2026年7月5日。表1给出字段口径，完整数据卡可在'+link('docs/phase2_data_card.md','项目仓库')+'查阅。CFPB允许公众分析其发布的数据[1]。课程快照的原下载批次、转换过程和再分发条件尚待核实，公开仓库提供代码、合成样例和聚合结果。')
+table('表1　投诉快照的字段及其含义',['字段','含义','字段','含义'],[
+ ['Date received','收件日期','State','州或地区'],
+ ['Product','产品原标签','ZIP code','邮编或屏蔽值'],
+ ['Sub-product','子产品','Tags','特定群体标签'],
+ ['Issue','投诉问题','Submitted via','提交渠道'],
+ ['Sub-issue','问题细类','Date sent to company','转交公司日期'],
+ ['Consumer complaint narrative','公开叙述','Company response to consumer','公司处理结果'],
+ ['Company public response','公司公开回应','Timely response?','回应是否及时'],
+ ['Company','公司名称标签','Complaint ID','投诉标识符']], [1.7,.85,1.7,.85])
+p('收件和转交时间按日期解析，邮编按字符串保存，产品及问题按类别计数。投诉标识符缺失2,390条，重复数值标识符的额外记录为0条，产品名缺失121条。公开叙述非空占23.06%。基线只需收件月、原产品标签及其计数，可直接复用阶段一月表。程序保留显式零值，并对缺失的产品月报错，以免将分类调整后的首次出现误判为骤增。')
+sub('2.2　研究样本与时间划分')
+p('主实验选择历史标签连续的房贷、学生贷款、债务催收、支票或储蓄账户、车辆贷款或租赁、汇款相关服务。征信产品在2017年和2023年附近出现标签变动与重叠。为保持口径一致，主实验限于上述六类，并使用截至2025年底的月份。验证期共纳入452,936条，占同期全库4,026,336条的'+pct(M['validation_coverage'])+'，研究结论的适用范围限于这些类别。')
+table('表2　六类产品的时间划分',['区段','起止月份','产品月数','用途'],[
+ ['预热期','2017.05—2018.04','72','建立首个历史窗口'],
+ ['开发期','2018.05—2022.12','336','开发程序、确定规则'],
+ ['验证期','2023.01—2024.12','144','评估基线与模拟检出率'],
+ ['保留测试期','2025.01—2025.12','72','核查结构，供阶段三比较']], [1,1.55,.85,1.9])
+p('表2将同月各产品划入同一区段，共104个月。阶段一曾观察2025年度总量，本阶段将该年的逐月评分保留至模型比较。按收件月回测反映事后可见的信息。数据库公开可能滞后，且相邻月份可能相关，在线预警效果仍需专门验证。')
+sub('2.3　异常增长的评分')
+p('对每个产品月，以此前12个完整月的中位数作为参照，以计数相对中位数的绝对偏差中位数（MAD）度量历史波动。代码1给出历史窗口。代码2将尺度下限设为1条并记录尺度触底，避免历史波动为零时发生除零。中位数使用Python标准库计算[4]。')
+p('代码1　构造历史窗口',cap)
 window_lines=[line.strip() for line in inspect.getsource(phase2.score_panel).splitlines() if 'history = [' in line]
-p('代码2　排除当前月的历史切片',cap);code('\n'.join(window_lines))
-p('候选只取正分数，按分数降序，月份、产品升序打破并列。固定预算为验证期两年共20条（20/144=13.89%），不是每月20条。实际第20名分数是这次名单截断点，不是部署时可通用的异常阈值。窗口和预算按课程解释性目标事先设定，本阶段未搜索最优参数。')
-
-# 4: experiment design and verification
-page();h('4　评估设计、模拟与实现验证')
-p('无真实异常标签，真实流只报告候选名单与集中度。主模拟指标为“注入点进入前20的次数/试验次数”，反映固定人工预算下的增长敏感性；漏检意味着线索可能未获关注，误选会消耗复核时间，但本数据不能量化真实误报率。')
-p('固定种子0—9，每种子从144个验证位置中无放回抽20个。每次只在一个位置增加25%、50%、100%或200%（向上取整且至少1条），四档位置配对；不同种子可重复，共800次单点实验，每档200次。每次复制原计数，重新计算滚动评分，允许注入影响后续窗口。还记录该位置在未注入时是否已入选。代码3摘取实际实现，省略末尾汇总。')
-p('代码3　单点注入在副本上执行',cap)
+code('\n'.join(window_lines))
+p('代码2　计算向上偏离分数',cap)
+source=inspect.getsource(phase2.score_point).splitlines()
+code('\n'.join(line[4:] for line in source[source.index('    median = statistics.median(history)'):]))
+p('若历史12个月均为100条，当前为130条，则中位数为100、MAD为0、尺度取1，得到分数30。真实验证期的零MAD候选有'+str(M['zero_mad_count'])+'个。将两年验证期的正分数由高到低排序，取前20名。并列时依次按月份和原标签升序排列。完整实现见'+link('complaints_analyzer/phase2.py','评分与排序源码')+'。')
+sub('2.4　模拟实验与实现检验')
+p('以模拟增长点进入前20的次数除以试验次数，衡量固定复核预算下的检出率。每个种子从144个验证位置中无放回抽取20个位置。每次只在一个位置将计数增加25%、50%、100%或200%，向上取整且至少增加1条。四档共用同一组位置，10个种子（0至9）合计800次。每次在副本上重新评分，单点注入可影响随后12个月的历史基线。')
+p('代码3　向单个产品月注入增长',cap)
 inj=inspect.getsource(phase2.injection_experiment).splitlines()
 start=next(i for i,l in enumerate(inj) if 'altered = counts.copy()' in l)
 end=next(i for i,l in enumerate(inj[start:],start) if 'scored = [' in l)
 code('\n'.join(l[16:] for l in inj[start:end]))
-table('表3　正确性与可复现性检查',['检查','实际执行结果'],[
- ['阶段一回归20项','计数、CSV边界、日期/ID、隐私、CLI等均通过'],
- ['阶段二新增12项','手算、首个可评分月、未来扰动、当前排除、缺月/显式零、并列、非法月、配置顺序、注入不改原值/配对、坏聚合、测试期不评分均通过'],
- ['证据与环境','历史哈希9/9通过；月表对账16,545,376。PyCharm内Python '+M['environment']['python']+'，32项测试通过。'],
- ['时间与范围','评分/模拟及导出单次'+str(M['elapsed_seconds'])+'秒；不含IDE启动、单测及PDF。未重扫8.93 GB原始文件。']], [1,3])
-p('表3对应的实际入口为'+link('scripts/run_phase2.py','scripts/run_phase2.py')+'。完整日志和配置随包提供。首次IDE启动因缓存锁失败，使用独立缓存后在原项目解释器运行成功，未修改原设置。核心仍仅依赖标准库；PDF额外使用reportlab，环境和随机种子分别记录。',small)
-p('不确定性用各随机位置种子下检出比例的最小值、最大值和标准差描述。种子间位置可能重叠，且真实流已包含未知事件，所以这些波动不能解释为总体置信区间；也不能把未注入位置全部视为正常负类。')
-
-# 5: results with actual chart
-page();h('5　初始结果与错误线索分析')
-table('表4　验证期单点增长进入前20的比例',['增加幅度','入选/试验','平均比例','种子最小—最大','标准差'],[
+table('表3　实现检验与复现条件',['检验项目','结果'],[
+ ['阶段一回归','20项通过，覆盖CSV结构、计数、ID及隐私检查。'],
+ ['阶段二新增','12项通过，覆盖时间窗口、未来值扰动、缺月、并列排序、位置配对及输入完整性等。'],
+ ['数据对账与运行','历史哈希9/9通过，月表计数与16,545,376条原始记录相符。PyCharm使用Python '+M['environment']['python']+'，本机基线实验耗时'+str(M['elapsed_seconds'])+'秒。']], [1.15,3.85])
+p('表3为实际运行结果。在项目根目录执行 <font name="Courier">python scripts/run_phase2.py</font> 可复现手算样例、测试与基线。六个原标签、时间边界及随机种子见'+link('configs/phase2.json','实验配置')+'，运行日志与评分表见'+f'<link href="{VERSION}/evidence_phase2" color="#244F70">固定版本实验记录</link>。',small)
+h('3　实验结果与讨论')
+sub('3.1　模拟增长的检出率')
+table('表4　四种增长幅度的模拟检出结果',['增长幅度','入选次数/试验次数','检出率','种子间范围','标准差'],[
  [f'+{s["fraction"]*100:.0f}%',f'{s["hits"]}/{s["trials"]}',pct(s['rate']),
-  f'{s["seed_rate_min"]*100:.0f}%—{s["seed_rate_max"]*100:.0f}%',f'{s["seed_rate_sd"]*100:.2f}个百分点'] for s in M['injections']], [1,1,1,1.5,1.2])
-p('表4显示，增加25%仍有106/200次未进入候选预算；100%增幅亦有10/200次未入选。200%全部入选只说明强扰动容易检出。200个位置中27个在注入前已入选；四档新增入选依次为67、126、163、173，避免把全部命中都归功于注入。')
-p('自然流144个候选中103个分数为正（71.53%），不能把“正分数”当作可信异常判据。前20为债务催收7、学生贷款5、车辆3、汇款3、账户1、房贷1；分组参照仍会反复选择持续上升的序列。图2展示债务催收的实际计数、历史中位数与入选点，供观察基线追随的滞后。')
+  f'{s["seed_rate_min"]*100:.0f}%—{s["seed_rate_max"]*100:.0f}%',f'{s["seed_rate_sd"]*100:.2f}个百分点'] for s in M['injections']], [1,1.5,.9,1.15,1.25])
+p('表4中，增加25%时有106/200次未入选，增加100%时仍有10/200次未入选。每档200次注入中，有27次对应的位置原本就在前20名。扣除这部分后，由弱到强四档分别新增67、126、163和173次入选。种子间的范围与标准差刻画抽取位置带来的波动，同一位置可以出现在不同种子中。')
+sub('3.2　候选月份的时间分布')
+p('真实数据的144个候选中有103个正分数。前20名中，债务催收占7条、学生贷款5条、车辆贷款或租赁3条、汇款相关服务3条，其余两类各1条。图1以债务催收为例，同时画出月投诉量、历史中位数和入选点。')
+
 draw=Drawing(W,170)
 x0,y0,pw,ph=45,29,W-57,112
 rows=sorted([r for r in scored if r['product']=='Debt collection'],key=lambda r:r['month'])
-maximum=max(float(r['count']) for r in rows)*1.1
-for j in range(4):
-    yy=y0+ph*j/3
+maximum = 5000 * math.ceil(max(float(r['count']) for r in rows) / 5000)
+for tick in range(0, maximum + 1, 5000):
+    yy = y0 + ph * tick / maximum
     draw.add(Line(x0,yy,x0+pw,yy,strokeColor=colors.HexColor('#DDDDDD'),strokeWidth=.4))
-    draw.add(String(x0-5,yy-3,str(round(maximum*j/3)),fontName='CN2',fontSize=9,textAnchor='end'))
+    draw.add(String(x0-5,yy-3,f'{tick:,}',fontName='CN2',fontSize=9,textAnchor='end'))
 for field,color in [('count','#244F70'),('baseline','#B57930')]:
     points=[]
     for i,r in enumerate(rows):points.extend([x0+pw*i/(len(rows)-1),y0+ph*float(r[field])/maximum])
-    draw.add(PolyLine(points,strokeColor=colors.HexColor(color),strokeWidth=1.3))
+    draw.add(PolyLine(points,strokeColor=colors.HexColor(color),strokeWidth=1.3,
+                      strokeDashArray=[5, 2] if field == 'baseline' else None))
 chosen={(r['month'],r['product']) for r in ranked}
 for i,r in enumerate(rows):
     if (r['month'],r['product']) in chosen:
         draw.add(Circle(x0+pw*i/23,y0+ph*float(r['count'])/maximum,2.7,fillColor=colors.HexColor('#B54738'),strokeColor=None))
 for i in (0,6,12,18,23):draw.add(String(x0+pw*i/23,y0-13,rows[i]['month'],fontName='CN2',fontSize=9,textAnchor='middle'))
-draw.add(String(x0,154,'蓝：月投诉量　棕：过去12月中位数　红点：前20入选',fontName='CN2',fontSize=10))
-p('图2　债务催收验证期计数与历史参照（单位：条）',cap)
-story.append(draw);md.append('![图2 债务催收](phase2_debt_collection.svg)')
+draw.add(Line(48,156,67,156,strokeColor=colors.HexColor('#244F70'),strokeWidth=1.4))
+draw.add(String(72,152,'月投诉量（条）',fontName='CN2',fontSize=10))
+draw.add(Line(167,156,186,156,strokeColor=colors.HexColor('#B57930'),strokeDashArray=[5,2],strokeWidth=1.4))
+draw.add(String(191,152,'过去12个月的中位数',fontName='CN2',fontSize=10))
+draw.add(Circle(328,156,2.7,fillColor=colors.HexColor('#B54738'),strokeColor=None))
+draw.add(String(337,152,'进入前20名',fontName='CN2',fontSize=10))
+story.append(KeepTogether([draw, Paragraph('图1　债务催收月投诉量、历史中位数与入选月份',cap)]))
+md.append('![图1 债务催收月投诉量、历史中位数与入选月份](phase2_debt_collection.svg)')
 renderSVG.drawToFile(draw,str(args.output_dir/'phase2_debt_collection.svg'))
 first=ranked[0]
-p(f'最高分为{first["month"]}债务催收：{int(first["count"]):,}条，历史中位数{float(first["baseline"]):,.1f}条，分数{float(first["score"]):.2f}。相邻月份也进入候选，提示可能是连续过程而非彼此独立的事件。本文没有事件真值或人工已确认结论，不据图推断原因。主要失败风险是温和增长漏选、持续抬升重复占用预算及尺度估计不稳。')
+p(f'最高分出现在{first["month"]}，当月债务催收投诉为{int(first["count"]):,}条，历史中位数为{float(first["baseline"]):,.1f}条，分数为{float(first["score"]):.2f}。其相邻月份也入选，显示持续增长可能占用多个复核名额。连续月份重复入选会挤占其他线索的复核名额，低幅增长的漏选也可能延迟调查。由于缺少客户规模分母和真实事件标签，候选仍需结合类别调整及事件背景核查。')
 
-# 6: AI and honest contribution, limitations, future
-page();h('6　大模型协作、局限与下一阶段')
-p('本阶段以Codex大模型辅助需求分解、Python开发、测试设计、统计解释和排版。成员提供教师反馈，要求先审方案，并多轮修订提示词及记录形式；AI执行开发与本机IDE操作。附录B完整展示15条经确认整理的提示词及建议/行动，属于交互内容整理，不冒充逐字日志。')
-p('<b>一次数据判断：</b>“缺月能否填零”的提问促使AI核查原标签连续性，进而排除征信断点而保留六类面板。这一决定避免将改名人为构造成异常，代价是验证期只覆盖全库同期11.25%。<b>一次代码约束：</b>“把未来月份改得很大”的反例落实为防泄漏测试，并在PyCharm通过。相比接受AI口头保证，这使关键主张具有可失败的检查。')
-table('表5　成员职责与本次参与说明',['成员','工作安排与记录边界'],[
- ['孙永滔','已在本次对话提供教师反馈、确定累积写作与IDE顺序、修改提示词要求并审核执行方案；负责问题界定、技术验收、结果解释与定稿。'],
- ['束琪遇','本阶段分工：负责16字段字典、产品口径核查、边界样例检查、结果复核与论文校对。'],
- ['AI辅助范围','代码、测试、数据卡、图表与论文由Codex辅助生成；本次PyCharm点击与运行由AI执行。后续成员分别执行和解释所属任务后更新贡献记录。']], [1,3])
-p('表5将成员分工、已确认的需求审核与AI执行分别说明。可供两人复现和讲解的具体产物包括16字段字典、六类面板资格规则、624行划分、144行评分、20条候选、800条配对模拟及12项新增测试；未将AI操作日志记为成员亲自执行。')
-p('<b>局限与伦理：</b>数据选择、渠道与公开延迟可能造成观测变化，缺少客户基数和事件标签；历史快照不等于当时可见信息。仅按连续原标签筛选也会遗漏研究上重要的征信类别。模型不能用于认定企业违法、个体画像或自动赔付；原始叙述及个人级字段不上传。尺度下限和固定预算是可解释约定，其敏感性尚待验证。')
-table('表6　累积后续安排与完成标准',['阶段','任务、分工与验收'],[
- ['三：比较研究','孙永滔配置MAD/可解释统计模型/Isolation Forest[5]；束琪遇核查统一切分、案例和窗口/尺度消融。验证后冻结，2025只用于最终比较，保留不优于基线的负结果。'],
- ['四：系统集成','孙永滔集成分析与解释入口；束琪遇设计正常、困难及失败案例。验收端到端结果、输入失败处理及耗时。'],
- ['五：受控扩展','共同检验文本覆盖/分类提示是否改善解释；需要时新增扫描并遵守许可。报告前后成本、无收益情形及监控方案。']], [1,3])
-p('<b>阶段结论：</b>历史中位数/MAD在固定20条预算下能稳定选出强模拟增长，但对25%增长只检出47%，且真实候选中存在连续月份重复入选。这支持在阶段三检验季节性与持续趋势处理，而非直接宣布已解决异常识别。现申请批准面板、时间划分及评估方案，完整模型比较沿同一论文继续累积。')
-
+peak = max(rows, key=lambda r: int(r['count']))
+p(f'图1中投诉量最高的月份为{peak["month"]}，共{int(peak["count"]):,}条。此时历史中位数已升至{float(peak["baseline"]):,.0f}条，MAD为{float(peak["mad"]):,.1f}条，偏离分数为{float(peak["score"]):.2f}。与4月相比，10月数量更高，但较宽的历史波动范围降低了该月的排序。这一差异表明，解释候选线索需要同时查阅原始计数、历史参照和分数。')
+sub('3.3　适用范围与局限')
+p('各档模拟对同一位置单独增加投诉数。对原本排在前20以外的173次试验，增加25%后有67次进入前20，约占38.7%。温和变化更容易受原有波动掩盖。真实事件还可能缓慢演变或同时波及多个产品，单点模拟只能检验其中一种变化方式。')
+p('跨产品比较还受到市场规模和投诉渠道的影响。本文采用产品自身的历史参照，并保留有限复核预算，仍可能遗漏低频产品和改名产品。实际调查须结合业务背景，并核对数据在调查当时是否已经公开。')
+story.append(CondPageBreak(310))
+h('4　成员分工与大模型协作')
+p('孙永滔与束琪遇负责项目的问题界定、数据核查和结果解释，具体分工见表5。团队使用Codex辅助实现和验证，并按研究过程整理了表6中的15条提示词。关于缺月的提问影响了产品筛选，关于未来月份的反例则转化为自动化测试。')
+table('表5　成员职责与本次参与说明',['成员','职责与参与情况'],[
+ ['孙永滔','负责研究问题、技术验收、结果解释与定稿。本阶段提出修改要求，审核研究方案，并确定提示词的记录方式。'],
+ ['束琪遇','本阶段分工包括核查16个字段和产品分类口径、检查边界样例、复核结果与校对论文。']], [.8,4.2])
+p('表6按团队确认的提示词整理。第三列记录AI提出的建议或实际执行的工作，本次代码生成、PyCharm操作和运行记录由AI完成。',small)
+table('表6　研究中的提示词与大模型协作记录',['编号','我们给 AI 的提示词','AI 给出的建议或采取的行动'],
+      [[item['id'],item['prompt'],item['action']] for item in PROMPTS],[.34,2.45,2.21], long_table=True)
+h('5　结论与展望')
+p('在六类金融产品、两年验证期共20条的复核预算下，基线对25%单点增长的模拟检出率为47%，对100%单点增长为95%。债务催收的多个相邻月份重复入选，提示逐月排序可能高估一次持续增长所需的复核名额。阶段三将沿用相同面板、预算与注入位置，由孙永滔实现可解释统计模型和孤立森林[5]，束琪遇按分工核对时间划分和典型案例。以保留测试期的公平比较、窗口敏感性分析及重复入选案例分析作为验收依据。')
+p('后续集成阶段将检验正常输入、边界和失败情形。文本覆盖与产品分类提示的作用留待受控比较。公开产物限于聚合计数和程序，投诉叙述及个人级位置数据保存在本地。')
 page();h('参考文献')
 refs=[
- '[1] Consumer Financial Protection Bureau. Consumer Complaint Database. 访问：2026-11-08. https://www.consumerfinance.gov/data-research/consumer-complaints/',
- '[2] Consumer Financial Protection Bureau. How we share complaint data. 访问：2026-11-08. https://www.consumerfinance.gov/complaint/data-use/',
- '[3] Python Software Foundation. statistics — Mathematical statistics functions. https://docs.python.org/3/library/statistics.html （中位数计算接口；访问2026-11-08）.',
- '[4] Y. Dou, Y. Roh. Public Disclosure and Consumer Financial Protection. Journal of Financial and Quantitative Analysis, 59(5):2164–2198, 2024. DOI:10.1017/S0022109023000613. 文本选择偏差见p.2170脚注10。',
- '[5] F. T. Liu, K. M. Ting, Z.-H. Zhou. Isolation Forest. IEEE ICDM, 413–422, 2008. DOI:10.1109/ICDM.2008.17. （阶段三拟比较方法）.'
+ '[1] Consumer Financial Protection Bureau. Consumer Complaint Database [DB/OL]. 2026-11-08. https://www.consumerfinance.gov/data-research/consumer-complaints/',
+ '[2] Consumer Financial Protection Bureau. How we share complaint data [EB/OL]. 2026-11-08. https://www.consumerfinance.gov/complaint/data-use/',
+ '[3] Dou Y, Roh Y. Public Disclosure and Consumer Financial Protection. Journal of Financial and Quantitative Analysis, 2024, 59(5), 2164–2198. DOI 10.1017/S0022109023000613. 文本公开的选择偏差见第2170页脚注10。',
+ '[4] Python Software Foundation. statistics — Mathematical statistics functions [EB/OL]. 2026-11-08. https://docs.python.org/3/library/statistics.html',
+ '[5] Liu F T, Ting K M, Zhou Z H. Isolation Forest. IEEE International Conference on Data Mining, 2008, 413–422. DOI 10.1109/ICDM.2008.17.'
 ]
 for ref in refs:p(ref,small)
-h('附录A　数据字典、版本与复现')
-p('原始字段及风险见下表；本阶段实际输入只有月份、原产品标签、计数。历史原始指纹与阶段一证据保持不变。',small)
-dictionary=[
- ('Date received','日期时间','UTC月；非法另计'),('Product','类别','分组；历史标签原样保留'),
- ('Sub-product','类别','子产品；不评分'),('Issue','类别','问题；不评分'),('Sub-issue','类别','子问题；不评分'),
- ('Consumer complaint narrative','可空文本','不进入评分/公开产物'),('Company public response','可空类别','事后回应；不作特征'),
- ('Company','类别','不比较公司质量'),('State','地区类别','不作特征'),('ZIP code','字符串','不转整数/不画像'),
- ('Tags','可空标签','可能敏感；不作特征'),('Submitted via','类别','渠道变化可影响覆盖'),
- ('Date sent to company','日期时间','事后字段；不作特征'),('Company response to consumer','可空类别','不等于满意度'),
- ('Timely response?','类别','不等于问题已解决'),('Complaint ID','标识字符串','只用于阶段一质量诊断')]
-table('表A1　原始16字段字典',['字段','类型','解释/本阶段用途'],dictionary,[2.1,1,2])
-page();h('附录A（续）　原标签、复现与反馈回应')
-table('表A2　六个原产品标签',['原标签','本文简称'],[[p,names[p]] for p in C['products']],[3,1])
-p(f'固定代码版本：<link href="{VERSION}">{commit}</link><br/>阶段二标签：phase-2-submission；阶段一保留标签：phase-1-submission。源码中的核心评分见'+link('complaints_analyzer/phase2.py','phase2.py')+'，实验参数见'+link('configs/phase2.json','configs/phase2.json')+'。',small)
-p('最短运行（在项目根目录，Python 3.10及以上；核心无第三方依赖）：',small)
-story.append(Preformatted('python scripts/run_phase2.py\npython scripts/verify_evidence.py evidence_phase2',mono))
-md.append('```text\npython scripts/run_phase2.py\npython scripts/verify_evidence.py evidence_phase2\n```')
-p('运行输出在results/phase2。冻结产物在evidence_phase2，包括metrics.json、panel.csv、validation_scores.csv、top20.csv、injection_trials.csv、injection_summary.csv、run_log.txt及manifest.json。运行耗时随机器改变；同配置计数、排名及模拟统计应相同。IDE直接选择“阶段二：样例、测试与基线”。',small)
-p('重建PDF：安装requirements-report.txt后执行python scripts/build_phase2_report.py --output-dir reports。默认使用Windows宋体/黑体；其他平台通过字体参数指定中文TTF/TTC。图2的SVG及可编辑Markdown同时生成。',small)
-table('表A3　教师反馈与累积修订',['教师反馈','本次采取的行动','位置'],[
- ['未看见计划研究题目','标题、摘要及研究问题明确产品月增长识别','第1页'],
- ['采用论文格式','按引言、数据、方法、实验、讨论及参考组织，沿用阶段一成果','正文第1—6页'],
- ['关键代码写入PDF','实际评分、历史切片与注入片段，固定源码链接','第3—4页代码1—3'],
- ['展示大模型提示词与工作','确认后整理15条，说明AI建议和实际行动','第6页、附录B']], [1.3,2.6,1])
-p('正文前6页；参考文献和附录不计正文页数。本版基于报告一修订，不另起研究项目。70分为成员转述的教师评分；本稿只回应已提供的具体意见，不倒推未经提供的评分细项。',small)
+p(f'项目仓库　<link href="{repo}">{repo}</link><br/>提交标签　phase-2-submission<br/>提交版本　<link href="{VERSION}">{commit}</link>',small)
 
-# fixed four pages for full prompts, three columns only
-for start,end in [(0,3),(3,7),(7,11),(11,15)]:
-    page();h('附录B　我们给AI的提示词与建议/行动'+('（续）' if start else ''))
-    if start==0:
-        p('以下为成员需求及经确认的第一人称提示词整理，非逐字聊天转录。AI回答按本次已采取的行动概括；未实施事项明确保留为建议。表格仅含编号、提示词和建议/行动三列。',small)
-    table('表B1　大模型协作记录'+('（续）' if start else ''),['编号','我们给AI的提示词','AI给出的建议或采取的行动'],
-          [[x['id'],x['prompt'],x['action']] for x in PROMPTS[start:end]],[.35,2.4,2.25])
 
 def footer(canvas,doc):
     canvas.saveState();canvas.setFont('CN2',9)
     canvas.setFillColor(colors.HexColor('#555555'))
-    canvas.drawString(63,37,'金融产品月度投诉量的异常增长识别研究 · 阶段二累积稿')
-    canvas.drawRightString(A4[0]-63,37,str(doc.page));canvas.restoreState()
+    canvas.drawCentredString(A4[0]/2,35,str(doc.page))
+    canvas.restoreState()
 
 target=args.output_dir/'孙永滔_束琪遇_phase2_report.pdf'
 doc=SimpleDocTemplate(str(target),pagesize=A4,rightMargin=56.7,leftMargin=56.7,topMargin=56.7,bottomMargin=56.7,

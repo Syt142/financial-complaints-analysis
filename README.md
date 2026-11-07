@@ -15,11 +15,11 @@ python scripts/verify_evidence.py evidence_phase2
 
 PyCharm打开本项目后，选择已共享的 **阶段二：样例、测试与基线** 运行项。若未显示，打开`scripts/run_phase2.py`并运行，解释器用本项目`.venv`，工作目录用项目根目录。其他电脑无需沿用本机解释器路径。不要直接运行`phase2.py`文件；独立基线也可用`python -m complaints_analyzer.phase2`。
 
-数据字典见`docs/phase2_data_card.md`；时间划分、分数、预算及模拟含义见`docs/phase2_protocol.md`。主实验为六类原标签，624个产品月，验证144个，保留测试不评分。无真实异常标签，模拟检出率不是真实准确率。完整15条提示词与AI实际行动在`docs/phase2_prompts.json`及报告附录B。
+数据字典见`docs/phase2_data_card.md`；时间划分、分数、预算及模拟含义见`docs/phase2_protocol.md`。主实验为六类原标签，624个产品月，验证144个，保留测试不评分。无真实异常标签，模拟检出率不是真实准确率。完整15条提示词与AI实际行动在`docs/phase2_prompts.json`及论文正文第4节表6。
 
-报告重建：安装`requirements-report.txt`后，`python scripts/build_phase2_report.py --output-dir reports`。默认Windows中文字体，可用`--font-regular`与`--font-bold`指定其他字体。生成6页正文、参考/附录、可编辑Markdown及图2 SVG。源码片段自动来自实际实现。
+报告重建：安装`requirements-report.txt`后，`python scripts/build_phase2_report.py --output-dir reports`。默认Windows中文字体，可用`--font-regular`与`--font-bold`指定其他字体。生成5页正文、参考文献页、可编辑Markdown及图1 SVG。源码片段自动来自实际实现。
 
-本次AI操作PyCharm的解释器为Python3.14.5；不是成员自行运行的日志。两位成员职责和可核实参与范围在报告第6节；AI协作说明不代替个人实际操作记录。
+本次AI操作PyCharm的解释器为Python3.14.5；不是成员自行运行的日志。两位成员职责和可核实参与范围在正文第4节表5；AI协作说明不代替个人实际操作记录。
 
 以下保留阶段一使用及历史证据说明：
 
