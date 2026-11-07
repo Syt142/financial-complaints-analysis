@@ -1,0 +1,177 @@
+PHASE 2 | 2026-11-07T17:44:59.888785+00:00 | Python 3.14.5
+HAND EXAMPLE PASS: median=100, MAD=0, scale=1, score=30; not a probability
+test_cli_end_to_end (test_analyzer.AnalyzerTests.test_cli_end_to_end) ... ok
+test_cli_rejects_overwriting_input (test_analyzer.AnalyzerTests.test_cli_rejects_overwriting_input) ... ok
+test_duplicate_header_fails (test_analyzer.AnalyzerTests.test_duplicate_header_fails) ... ok
+test_duplicate_numeric_id_across_progress_batches (test_analyzer.AnalyzerTests.test_duplicate_numeric_id_across_progress_batches) ... ok
+test_empty_file_and_header_only_are_distinguished (test_analyzer.AnalyzerTests.test_empty_file_and_header_only_are_distinguished) ... ok
+test_empty_value_is_not_literal_na_or_zero (test_analyzer.AnalyzerTests.test_empty_value_is_not_literal_na_or_zero) ... ok
+test_export_privacy_input_integrity_and_checksums (test_analyzer.AnalyzerTests.test_export_privacy_input_integrity_and_checksums) ... ok
+test_invalid_date_is_reported_and_not_dropped (test_analyzer.AnalyzerTests.test_invalid_date_is_reported_and_not_dropped) ... ok
+test_limit_is_labeled_and_exact_eof_is_complete (test_analyzer.AnalyzerTests.test_limit_is_labeled_and_exact_eof_is_complete) ... ok
+test_manual_counts_and_reconciliation (test_analyzer.AnalyzerTests.test_manual_counts_and_reconciliation) ... ok
+test_missing_invalid_and_zero_ids (test_analyzer.AnalyzerTests.test_missing_invalid_and_zero_ids) ... ok
+test_missing_required_column_fails (test_analyzer.AnalyzerTests.test_missing_required_column_fails) ... ok
+test_negative_forwarding_and_same_day_order (test_analyzer.AnalyzerTests.test_negative_forwarding_and_same_day_order) ... ok
+test_quoted_comma_and_multiline_are_one_record (test_analyzer.AnalyzerTests.test_quoted_comma_and_multiline_are_one_record) ... ok
+test_reordered_header_is_supported (test_analyzer.AnalyzerTests.test_reordered_header_is_supported) ... ok
+test_short_record_fails_instead_of_silent_fill (test_analyzer.AnalyzerTests.test_short_record_fails_instead_of_silent_fill) ... ok
+test_timezone_uses_utc_year (test_analyzer.AnalyzerTests.test_timezone_uses_utc_year) ... ok
+test_tracker_cap_is_explicit (test_analyzer.AnalyzerTests.test_tracker_cap_is_explicit) ... ok
+test_unclosed_quoted_record_fails (test_analyzer.AnalyzerTests.test_unclosed_quoted_record_fails) ... ok
+test_unknown_timeliness_is_not_in_rate_denominator (test_analyzer.AnalyzerTests.test_unknown_timeliness_is_not_in_rate_denominator) ... ok
+test_bad_aggregate_rejected (test_phase2.Phase2Tests.test_bad_aggregate_rejected) ... ok
+test_current_month_excluded_from_baseline (test_phase2.Phase2Tests.test_current_month_excluded_from_baseline) ... ok
+test_first_scored_month_and_window (test_phase2.Phase2Tests.test_first_scored_month_and_window) ... ok
+test_future_change_cannot_change_past (test_phase2.Phase2Tests.test_future_change_cannot_change_past) ... ok
+test_hand_calculation_constant_history (test_phase2.Phase2Tests.test_hand_calculation_constant_history) ... ok
+test_injection_pairing_reproducibility_and_no_mutation (test_phase2.Phase2Tests.test_injection_pairing_reproducibility_and_no_mutation) ... ok
+test_invalid_dates_and_reverse_range (test_phase2.Phase2Tests.test_invalid_dates_and_reverse_range) ... ok
+test_missing_month_fails_no_zero_fill (test_phase2.Phase2Tests.test_missing_month_fails_no_zero_fill) ... ok
+test_phase_two_does_not_score_test_period (test_phase2.Phase2Tests.test_phase_two_does_not_score_test_period) ... ok
+test_temporal_boundary_configuration_validation (test_phase2.Phase2Tests.test_temporal_boundary_configuration_validation) ... ok
+test_ties_are_deterministic_and_nonpositive_excluded (test_phase2.Phase2Tests.test_ties_are_deterministic_and_nonpositive_excluded) ... ok
+test_zero_counts_are_distinct_from_missing (test_phase2.Phase2Tests.test_zero_counts_are_distinct_from_missing) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.584s
+
+OK
+
+PASS analysis.md
+PASS cross_tables.csv
+PASS frequencies.csv
+PASS full_run.json
+PASS quality.csv
+PASS reference_comparison.json
+PASS reference_control.json
+PASS source_fingerprint.json
+PASS test_results.txt
+Evidence SHA-256: 9/9 passed
+
+{
+  "config": {
+    "schema_version": 1,
+    "products": [
+      "Mortgage",
+      "Student loan",
+      "Debt collection",
+      "Checking or savings account",
+      "Vehicle loan or lease",
+      "Money transfer, virtual currency, or money service"
+    ],
+    "panel_start": "2017-05",
+    "panel_end": "2025-12",
+    "warmup_end": "2018-04",
+    "development_end": "2022-12",
+    "validation_end": "2024-12",
+    "test_end": "2025-12",
+    "window": 12,
+    "scale_floor": 1.0,
+    "mad_multiplier": 1.4826,
+    "budget": 20,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "trials_per_seed": 20,
+    "growth_fractions": [
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "interpretation": "Retrospective ranking after each complete month; no true anomaly labels. Test ranking is not produced in phase 2."
+  },
+  "source_sha256": "de7bd4a3293e931cbca60e178ac1b1ab6e30388340570e5679f0ab1228b673ae",
+  "config_sha256": "3b44eca4addc08d273fc19833abcda193bc2cbbfac0525935ce2f27fbb198b36",
+  "full_run_sha256": "ae3209b4b6d54c87edd893669408589ed05080403c488ddb2ee8484492431610",
+  "rows_reconciled": 16545376,
+  "panel_rows": 624,
+  "split_rows": {
+    "warmup": 72,
+    "development": 336,
+    "validation": 144,
+    "test": 72
+  },
+  "validation_complaints": 452936,
+  "all_validation_complaints": 4026336,
+  "validation_coverage": 0.11249334382426107,
+  "candidate_count": 144,
+  "positive_score_count": 103,
+  "top20_products": {
+    "Debt collection": 7,
+    "Checking or savings account": 1,
+    "Vehicle loan or lease": 3,
+    "Student loan": 5,
+    "Money transfer, virtual currency, or money service": 3,
+    "Mortgage": 1
+  },
+  "zero_mad_count": 0,
+  "injections": [
+    {
+      "fraction": 0.25,
+      "hits": 94,
+      "trials": 200,
+      "rate": 0.47000000000000003,
+      "already_selected": 27,
+      "newly_selected": 67,
+      "seed_rate_min": 0.25,
+      "seed_rate_max": 0.55,
+      "seed_rate_sd": 0.08881941729649485
+    },
+    {
+      "fraction": 0.5,
+      "hits": 153,
+      "trials": 200,
+      "rate": 0.765,
+      "already_selected": 27,
+      "newly_selected": 126,
+      "seed_rate_min": 0.55,
+      "seed_rate_max": 0.95,
+      "seed_rate_sd": 0.11316163464511969
+    },
+    {
+      "fraction": 1.0,
+      "hits": 190,
+      "trials": 200,
+      "rate": 0.95,
+      "already_selected": 27,
+      "newly_selected": 163,
+      "seed_rate_min": 0.9,
+      "seed_rate_max": 1,
+      "seed_rate_sd": 0.033333333333333326
+    },
+    {
+      "fraction": 2.0,
+      "hits": 200,
+      "trials": 200,
+      "rate": 1,
+      "already_selected": 27,
+      "newly_selected": 173,
+      "seed_rate_min": 1,
+      "seed_rate_max": 1,
+      "seed_rate_sd": 0.0
+    }
+  ],
+  "environment": {
+    "python": "3.14.5",
+    "platform": "Windows-11-10.0.22621-SP0"
+  },
+  "elapsed_seconds": 1.726,
+  "limitations": [
+    "No true anomaly labels; no real accuracy/precision/false-positive-rate.",
+    "Seed ranges describe simulation placement sensitivity, not confidence intervals.",
+    "Snapshot retrospective ranking is not proof of real-time availability.",
+    "Test structure checked, test scoring deferred; annual totals were seen in phase 1."
+  ]
+}
+PHASE 2 COMPLETE: test scores deferred; raw CSV was not opened.

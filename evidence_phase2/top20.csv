@@ -1,0 +1,21 @@
+﻿month,product,count,split,history_start,history_end,baseline,mad,scale,score,zero_mad,scale_floored
+2024-04,Debt collection,12912,validation,2023-04,2024-03,5721.5,289.5,429.2127,16.75276616931419,False,False
+2023-01,Checking or savings account,6395,validation,2022-01,2022-12,3079.0,138.0,204.59879999999998,16.20732868423471,False,False
+2024-03,Debt collection,12354,validation,2023-03,2024-02,5721.5,289.5,429.2127,15.45271144120386,False,False
+2023-01,Vehicle loan or lease,1505,validation,2022-01,2022-12,740.5,41.0,60.7866,12.576785015118464,False,False
+2023-10,Student loan,2130,validation,2022-10,2023-09,549.0,99.5,147.5187,10.717285333994944,False,False
+2024-05,Debt collection,12427,validation,2023-05,2024-04,5855.5,423.5,627.8811,10.466153544038832,False,False
+2024-02,Debt collection,8772,validation,2023-02,2024-01,5582.5,273.0,404.7498,7.880176840112089,False,False
+2023-11,Student loan,1625,validation,2022-11,2023-10,549.0,99.5,147.5187,7.29399052459112,False,False
+2024-12,"Money transfer, virtual currency, or money service",1731,validation,2023-12,2024-11,1322.0,45.5,67.4583,6.063004848921483,False,False
+2023-09,Student loan,1423,validation,2022-09,2023-08,549.0,99.5,147.5187,5.92467260082959,False,False
+2023-02,Vehicle loan or lease,1170,validation,2022-02,2023-01,746.0,51.0,75.6126,5.607531019962281,False,False
+2024-06,Debt collection,11099,validation,2023-06,2024-05,5990.5,634.5,940.7097,5.430474459867906,False,False
+2024-01,Student loan,1617,validation,2023-01,2023-12,575.0,178.0,263.9028,3.948423434688832,False,False
+2024-08,"Money transfer, virtual currency, or money service",1557,validation,2023-08,2024-07,1276.5,48.0,71.1648,3.941555375691353,False,False
+2024-01,Debt collection,7176,validation,2023-01,2023-12,5582.5,273.0,404.7498,3.9370000924027635,False,False
+2024-03,"Money transfer, virtual currency, or money service",1457,validation,2023-03,2024-02,1146.5,54.0,80.0604,3.8783218669904223,False,False
+2023-03,Debt collection,6297,validation,2022-03,2023-02,4724.0,292.0,432.9192,3.6334724817009736,False,False
+2024-03,Vehicle loan or lease,1333,validation,2023-03,2024-02,1003.5,62.0,91.9212,3.5845920201215824,False,False
+2023-01,Mortgage,2837,validation,2022-01,2022-12,1808.5,197.5,292.8135,3.5124746639072315,False,False
+2023-12,Student loan,1289,validation,2022-12,2023-11,549.0,145.5,215.7183,3.4303997389187657,False,False

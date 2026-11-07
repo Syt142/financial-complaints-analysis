@@ -1,0 +1,625 @@
+﻿month,product,count,split
+2017-05,Mortgage,2664,warmup
+2017-05,Student loan,1024,warmup
+2017-05,Debt collection,4148,warmup
+2017-05,Checking or savings account,1385,warmup
+2017-05,Vehicle loan or lease,408,warmup
+2017-05,"Money transfer, virtual currency, or money service",273,warmup
+2017-06,Mortgage,2350,warmup
+2017-06,Student loan,891,warmup
+2017-06,Debt collection,3699,warmup
+2017-06,Checking or savings account,1734,warmup
+2017-06,Vehicle loan or lease,460,warmup
+2017-06,"Money transfer, virtual currency, or money service",369,warmup
+2017-07,Mortgage,2293,warmup
+2017-07,Student loan,1029,warmup
+2017-07,Debt collection,4214,warmup
+2017-07,Checking or savings account,1675,warmup
+2017-07,Vehicle loan or lease,411,warmup
+2017-07,"Money transfer, virtual currency, or money service",416,warmup
+2017-08,Mortgage,2444,warmup
+2017-08,Student loan,1018,warmup
+2017-08,Debt collection,4368,warmup
+2017-08,Checking or savings account,1574,warmup
+2017-08,Vehicle loan or lease,487,warmup
+2017-08,"Money transfer, virtual currency, or money service",418,warmup
+2017-09,Mortgage,2262,warmup
+2017-09,Student loan,865,warmup
+2017-09,Debt collection,3533,warmup
+2017-09,Checking or savings account,1574,warmup
+2017-09,Vehicle loan or lease,439,warmup
+2017-09,"Money transfer, virtual currency, or money service",351,warmup
+2017-10,Mortgage,2302,warmup
+2017-10,Student loan,879,warmup
+2017-10,Debt collection,4028,warmup
+2017-10,Checking or savings account,1467,warmup
+2017-10,Vehicle loan or lease,479,warmup
+2017-10,"Money transfer, virtual currency, or money service",290,warmup
+2017-11,Mortgage,2168,warmup
+2017-11,Student loan,707,warmup
+2017-11,Debt collection,3558,warmup
+2017-11,Checking or savings account,1594,warmup
+2017-11,Vehicle loan or lease,468,warmup
+2017-11,"Money transfer, virtual currency, or money service",359,warmup
+2017-12,Mortgage,2034,warmup
+2017-12,Student loan,651,warmup
+2017-12,Debt collection,3880,warmup
+2017-12,Checking or savings account,1413,warmup
+2017-12,Vehicle loan or lease,431,warmup
+2017-12,"Money transfer, virtual currency, or money service",717,warmup
+2018-01,Mortgage,2124,warmup
+2018-01,Student loan,894,warmup
+2018-01,Debt collection,4898,warmup
+2018-01,Checking or savings account,1739,warmup
+2018-01,Vehicle loan or lease,598,warmup
+2018-01,"Money transfer, virtual currency, or money service",1220,warmup
+2018-02,Mortgage,2097,warmup
+2018-02,Student loan,738,warmup
+2018-02,Debt collection,4460,warmup
+2018-02,Checking or savings account,1611,warmup
+2018-02,Vehicle loan or lease,475,warmup
+2018-02,"Money transfer, virtual currency, or money service",574,warmup
+2018-03,Mortgage,2420,warmup
+2018-03,Student loan,839,warmup
+2018-03,Debt collection,5254,warmup
+2018-03,Checking or savings account,1762,warmup
+2018-03,Vehicle loan or lease,510,warmup
+2018-03,"Money transfer, virtual currency, or money service",471,warmup
+2018-04,Mortgage,2724,warmup
+2018-04,Student loan,827,warmup
+2018-04,Debt collection,4748,warmup
+2018-04,Checking or savings account,1911,warmup
+2018-04,Vehicle loan or lease,586,warmup
+2018-04,"Money transfer, virtual currency, or money service",408,warmup
+2018-05,Mortgage,2219,development
+2018-05,Student loan,733,development
+2018-05,Debt collection,4729,development
+2018-05,Checking or savings account,1831,development
+2018-05,Vehicle loan or lease,535,development
+2018-05,"Money transfer, virtual currency, or money service",363,development
+2018-06,Mortgage,1885,development
+2018-06,Student loan,664,development
+2018-06,Debt collection,4242,development
+2018-06,Checking or savings account,1755,development
+2018-06,Vehicle loan or lease,455,development
+2018-06,"Money transfer, virtual currency, or money service",388,development
+2018-07,Mortgage,2015,development
+2018-07,Student loan,821,development
+2018-07,Debt collection,3991,development
+2018-07,Checking or savings account,1814,development
+2018-07,Vehicle loan or lease,491,development
+2018-07,"Money transfer, virtual currency, or money service",347,development
+2018-08,Mortgage,2084,development
+2018-08,Student loan,732,development
+2018-08,Debt collection,4403,development
+2018-08,Checking or savings account,1695,development
+2018-08,Vehicle loan or lease,469,development
+2018-08,"Money transfer, virtual currency, or money service",367,development
+2018-09,Mortgage,1779,development
+2018-09,Student loan,653,development
+2018-09,Debt collection,3678,development
+2018-09,Checking or savings account,1669,development
+2018-09,Vehicle loan or lease,461,development
+2018-09,"Money transfer, virtual currency, or money service",300,development
+2018-10,Mortgage,1966,development
+2018-10,Student loan,667,development
+2018-10,Debt collection,4078,development
+2018-10,Checking or savings account,1902,development
+2018-10,Vehicle loan or lease,490,development
+2018-10,"Money transfer, virtual currency, or money service",356,development
+2018-11,Mortgage,1634,development
+2018-11,Student loan,570,development
+2018-11,Debt collection,3343,development
+2018-11,Checking or savings account,1717,development
+2018-11,Vehicle loan or lease,402,development
+2018-11,"Money transfer, virtual currency, or money service",304,development
+2018-12,Mortgage,1617,development
+2018-12,Student loan,631,development
+2018-12,Debt collection,3255,development
+2018-12,Checking or savings account,1801,development
+2018-12,Vehicle loan or lease,412,development
+2018-12,"Money transfer, virtual currency, or money service",332,development
+2019-01,Mortgage,1779,development
+2019-01,Student loan,759,development
+2019-01,Debt collection,3126,development
+2019-01,Checking or savings account,1795,development
+2019-01,Vehicle loan or lease,383,development
+2019-01,"Money transfer, virtual currency, or money service",343,development
+2019-02,Mortgage,1749,development
+2019-02,Student loan,727,development
+2019-02,Debt collection,3785,development
+2019-02,Checking or savings account,1623,development
+2019-02,Vehicle loan or lease,434,development
+2019-02,"Money transfer, virtual currency, or money service",334,development
+2019-03,Mortgage,2002,development
+2019-03,Student loan,796,development
+2019-03,Debt collection,4224,development
+2019-03,Checking or savings account,1820,development
+2019-03,Vehicle loan or lease,530,development
+2019-03,"Money transfer, virtual currency, or money service",415,development
+2019-04,Mortgage,1993,development
+2019-04,Student loan,705,development
+2019-04,Debt collection,3977,development
+2019-04,Checking or savings account,1817,development
+2019-04,Vehicle loan or lease,475,development
+2019-04,"Money transfer, virtual currency, or money service",398,development
+2019-05,Mortgage,1945,development
+2019-05,Student loan,579,development
+2019-05,Debt collection,4129,development
+2019-05,Checking or savings account,1876,development
+2019-05,Vehicle loan or lease,461,development
+2019-05,"Money transfer, virtual currency, or money service",456,development
+2019-06,Mortgage,1856,development
+2019-06,Student loan,533,development
+2019-06,Debt collection,4043,development
+2019-06,Checking or savings account,1813,development
+2019-06,Vehicle loan or lease,442,development
+2019-06,"Money transfer, virtual currency, or money service",420,development
+2019-07,Mortgage,2012,development
+2019-07,Student loan,587,development
+2019-07,Debt collection,4005,development
+2019-07,Checking or savings account,1843,development
+2019-07,Vehicle loan or lease,511,development
+2019-07,"Money transfer, virtual currency, or money service",472,development
+2019-08,Mortgage,2035,development
+2019-08,Student loan,523,development
+2019-08,Debt collection,4219,development
+2019-08,Checking or savings account,2062,development
+2019-08,Vehicle loan or lease,475,development
+2019-08,"Money transfer, virtual currency, or money service",480,development
+2019-09,Mortgage,1857,development
+2019-09,Student loan,469,development
+2019-09,Debt collection,3973,development
+2019-09,Checking or savings account,1759,development
+2019-09,Vehicle loan or lease,463,development
+2019-09,"Money transfer, virtual currency, or money service",467,development
+2019-10,Mortgage,2069,development
+2019-10,Student loan,622,development
+2019-10,Debt collection,4015,development
+2019-10,Checking or savings account,1936,development
+2019-10,Vehicle loan or lease,502,development
+2019-10,"Money transfer, virtual currency, or money service",483,development
+2019-11,Mortgage,1717,development
+2019-11,Student loan,490,development
+2019-11,Debt collection,3516,development
+2019-11,Checking or savings account,1717,development
+2019-11,Vehicle loan or lease,419,development
+2019-11,"Money transfer, virtual currency, or money service",391,development
+2019-12,Mortgage,1687,development
+2019-12,Student loan,418,development
+2019-12,Debt collection,3321,development
+2019-12,Checking or savings account,1673,development
+2019-12,Vehicle loan or lease,390,development
+2019-12,"Money transfer, virtual currency, or money service",423,development
+2020-01,Mortgage,1835,development
+2020-01,Student loan,534,development
+2020-01,Debt collection,3759,development
+2020-01,Checking or savings account,1845,development
+2020-01,Vehicle loan or lease,461,development
+2020-01,"Money transfer, virtual currency, or money service",391,development
+2020-02,Mortgage,1825,development
+2020-02,Student loan,488,development
+2020-02,Debt collection,3971,development
+2020-02,Checking or savings account,1725,development
+2020-02,Vehicle loan or lease,448,development
+2020-02,"Money transfer, virtual currency, or money service",389,development
+2020-03,Mortgage,2136,development
+2020-03,Student loan,476,development
+2020-03,Debt collection,4199,development
+2020-03,Checking or savings account,1682,development
+2020-03,Vehicle loan or lease,487,development
+2020-03,"Money transfer, virtual currency, or money service",461,development
+2020-04,Mortgage,2201,development
+2020-04,Student loan,473,development
+2020-04,Debt collection,4506,development
+2020-04,Checking or savings account,2022,development
+2020-04,Vehicle loan or lease,548,development
+2020-04,"Money transfer, virtual currency, or money service",636,development
+2020-05,Mortgage,1904,development
+2020-05,Student loan,393,development
+2020-05,Debt collection,4420,development
+2020-05,Checking or savings account,1902,development
+2020-05,Vehicle loan or lease,574,development
+2020-05,"Money transfer, virtual currency, or money service",739,development
+2020-06,Mortgage,2009,development
+2020-06,Student loan,316,development
+2020-06,Debt collection,4427,development
+2020-06,Checking or savings account,2390,development
+2020-06,Vehicle loan or lease,601,development
+2020-06,"Money transfer, virtual currency, or money service",1153,development
+2020-07,Mortgage,2132,development
+2020-07,Student loan,310,development
+2020-07,Debt collection,4848,development
+2020-07,Checking or savings account,2524,development
+2020-07,Vehicle loan or lease,635,development
+2020-07,"Money transfer, virtual currency, or money service",1181,development
+2020-08,Mortgage,2091,development
+2020-08,Student loan,284,development
+2020-08,Debt collection,4733,development
+2020-08,Checking or savings account,2086,development
+2020-08,Vehicle loan or lease,625,development
+2020-08,"Money transfer, virtual currency, or money service",830,development
+2020-09,Mortgage,2330,development
+2020-09,Student loan,247,development
+2020-09,Debt collection,4722,development
+2020-09,Checking or savings account,2102,development
+2020-09,Vehicle loan or lease,726,development
+2020-09,"Money transfer, virtual currency, or money service",583,development
+2020-10,Mortgage,2241,development
+2020-10,Student loan,309,development
+2020-10,Debt collection,4936,development
+2020-10,Checking or savings account,2051,development
+2020-10,Vehicle loan or lease,644,development
+2020-10,"Money transfer, virtual currency, or money service",601,development
+2020-11,Mortgage,1821,development
+2020-11,Student loan,270,development
+2020-11,Debt collection,4703,development
+2020-11,Checking or savings account,1753,development
+2020-11,Vehicle loan or lease,577,development
+2020-11,"Money transfer, virtual currency, or money service",574,development
+2020-12,Mortgage,2127,development
+2020-12,Student loan,285,development
+2020-12,Debt collection,4644,development
+2020-12,Checking or savings account,2156,development
+2020-12,Vehicle loan or lease,645,development
+2020-12,"Money transfer, virtual currency, or money service",768,development
+2021-01,Mortgage,2189,development
+2021-01,Student loan,345,development
+2021-01,Debt collection,5020,development
+2021-01,Checking or savings account,2335,development
+2021-01,Vehicle loan or lease,638,development
+2021-01,"Money transfer, virtual currency, or money service",784,development
+2021-02,Mortgage,2333,development
+2021-02,Student loan,339,development
+2021-02,Debt collection,5282,development
+2021-02,Checking or savings account,2191,development
+2021-02,Vehicle loan or lease,598,development
+2021-02,"Money transfer, virtual currency, or money service",1094,development
+2021-03,Mortgage,2914,development
+2021-03,Student loan,377,development
+2021-03,Debt collection,6740,development
+2021-03,Checking or savings account,2761,development
+2021-03,Vehicle loan or lease,695,development
+2021-03,"Money transfer, virtual currency, or money service",1715,development
+2021-04,Mortgage,2522,development
+2021-04,Student loan,331,development
+2021-04,Debt collection,5738,development
+2021-04,Checking or savings account,2452,development
+2021-04,Vehicle loan or lease,618,development
+2021-04,"Money transfer, virtual currency, or money service",1710,development
+2021-05,Mortgage,2324,development
+2021-05,Student loan,276,development
+2021-05,Debt collection,5429,development
+2021-05,Checking or savings account,2711,development
+2021-05,Vehicle loan or lease,658,development
+2021-05,"Money transfer, virtual currency, or money service",1748,development
+2021-06,Mortgage,2172,development
+2021-06,Student loan,268,development
+2021-06,Debt collection,6617,development
+2021-06,Checking or savings account,2312,development
+2021-06,Vehicle loan or lease,660,development
+2021-06,"Money transfer, virtual currency, or money service",1384,development
+2021-07,Mortgage,1993,development
+2021-07,Student loan,388,development
+2021-07,Debt collection,7172,development
+2021-07,Checking or savings account,2337,development
+2021-07,Vehicle loan or lease,649,development
+2021-07,"Money transfer, virtual currency, or money service",890,development
+2021-08,Mortgage,2052,development
+2021-08,Student loan,367,development
+2021-08,Debt collection,6058,development
+2021-08,Checking or savings account,2471,development
+2021-08,Vehicle loan or lease,637,development
+2021-08,"Money transfer, virtual currency, or money service",914,development
+2021-09,Mortgage,2059,development
+2021-09,Student loan,318,development
+2021-09,Debt collection,5881,development
+2021-09,Checking or savings account,2365,development
+2021-09,Vehicle loan or lease,718,development
+2021-09,"Money transfer, virtual currency, or money service",865,development
+2021-10,Mortgage,2093,development
+2021-10,Student loan,420,development
+2021-10,Debt collection,5725,development
+2021-10,Checking or savings account,2447,development
+2021-10,Vehicle loan or lease,720,development
+2021-10,"Money transfer, virtual currency, or money service",910,development
+2021-11,Mortgage,1867,development
+2021-11,Student loan,363,development
+2021-11,Debt collection,5702,development
+2021-11,Checking or savings account,2460,development
+2021-11,Vehicle loan or lease,654,development
+2021-11,"Money transfer, virtual currency, or money service",949,development
+2021-12,Mortgage,2008,development
+2021-12,Student loan,334,development
+2021-12,Debt collection,4936,development
+2021-12,Checking or savings account,2714,development
+2021-12,Vehicle loan or lease,578,development
+2021-12,"Money transfer, virtual currency, or money service",933,development
+2022-01,Mortgage,2212,development
+2022-01,Student loan,568,development
+2022-01,Debt collection,5072,development
+2022-01,Checking or savings account,2960,development
+2022-01,Vehicle loan or lease,698,development
+2022-01,"Money transfer, virtual currency, or money service",1019,development
+2022-02,Mortgage,2213,development
+2022-02,Student loan,602,development
+2022-02,Debt collection,5509,development
+2022-02,Checking or savings account,3003,development
+2022-02,Vehicle loan or lease,741,development
+2022-02,"Money transfer, virtual currency, or money service",883,development
+2022-03,Mortgage,2505,development
+2022-03,Student loan,658,development
+2022-03,Debt collection,6108,development
+2022-03,Checking or savings account,3357,development
+2022-03,Vehicle loan or lease,701,development
+2022-03,"Money transfer, virtual currency, or money service",1110,development
+2022-04,Mortgage,2274,development
+2022-04,Student loan,615,development
+2022-04,Debt collection,6007,development
+2022-04,Checking or savings account,3236,development
+2022-04,Vehicle loan or lease,764,development
+2022-04,"Money transfer, virtual currency, or money service",1178,development
+2022-05,Mortgage,1793,development
+2022-05,Student loan,413,development
+2022-05,Debt collection,4567,development
+2022-05,Checking or savings account,2841,development
+2022-05,Vehicle loan or lease,593,development
+2022-05,"Money transfer, virtual currency, or money service",1152,development
+2022-06,Mortgage,1793,development
+2022-06,Student loan,430,development
+2022-06,Debt collection,4539,development
+2022-06,Checking or savings account,2808,development
+2022-06,Vehicle loan or lease,571,development
+2022-06,"Money transfer, virtual currency, or money service",1003,development
+2022-07,Mortgage,1720,development
+2022-07,Student loan,462,development
+2022-07,Debt collection,4377,development
+2022-07,Checking or savings account,3056,development
+2022-07,Vehicle loan or lease,589,development
+2022-07,"Money transfer, virtual currency, or money service",1192,development
+2022-08,Mortgage,2019,development
+2022-08,Student loan,601,development
+2022-08,Debt collection,4961,development
+2022-08,Checking or savings account,3431,development
+2022-08,Vehicle loan or lease,757,development
+2022-08,"Money transfer, virtual currency, or money service",1300,development
+2022-09,Mortgage,1783,development
+2022-09,Student loan,1120,development
+2022-09,Debt collection,4514,development
+2022-09,Checking or savings account,3187,development
+2022-09,Vehicle loan or lease,740,development
+2022-09,"Money transfer, virtual currency, or money service",1202,development
+2022-10,Mortgage,1624,development
+2022-10,Student loan,1354,development
+2022-10,Debt collection,4730,development
+2022-10,Checking or savings account,3102,development
+2022-10,Vehicle loan or lease,751,development
+2022-10,"Money transfer, virtual currency, or money service",1099,development
+2022-11,Mortgage,1518,development
+2022-11,Student loan,609,development
+2022-11,Debt collection,4337,development
+2022-11,Checking or savings account,2987,development
+2022-11,Vehicle loan or lease,803,development
+2022-11,"Money transfer, virtual currency, or money service",1221,development
+2022-12,Mortgage,1824,development
+2022-12,Student loan,520,development
+2022-12,Debt collection,4718,development
+2022-12,Checking or savings account,3614,development
+2022-12,Vehicle loan or lease,933,development
+2022-12,"Money transfer, virtual currency, or money service",1175,development
+2023-01,Mortgage,2837,validation
+2023-01,Student loan,580,validation
+2023-01,Debt collection,5871,validation
+2023-01,Checking or savings account,6395,validation
+2023-01,Vehicle loan or lease,1505,validation
+2023-01,"Money transfer, virtual currency, or money service",1269,validation
+2023-02,Mortgage,2165,validation
+2023-02,Student loan,528,validation
+2023-02,Debt collection,5250,validation
+2023-02,Checking or savings account,3945,validation
+2023-02,Vehicle loan or lease,1170,validation
+2023-02,"Money transfer, virtual currency, or money service",1066,validation
+2023-03,Mortgage,2176,validation
+2023-03,Student loan,515,validation
+2023-03,Debt collection,6297,validation
+2023-03,Checking or savings account,4299,validation
+2023-03,Vehicle loan or lease,1170,validation
+2023-03,"Money transfer, virtual currency, or money service",1135,validation
+2023-04,Mortgage,1658,validation
+2023-04,Student loan,397,validation
+2023-04,Debt collection,5514,validation
+2023-04,Checking or savings account,3477,validation
+2023-04,Vehicle loan or lease,956,validation
+2023-04,"Money transfer, virtual currency, or money service",1031,validation
+2023-05,Mortgage,1887,validation
+2023-05,Student loan,410,validation
+2023-05,Debt collection,5867,validation
+2023-05,Checking or savings account,4084,validation
+2023-05,Vehicle loan or lease,1034,validation
+2023-05,"Money transfer, virtual currency, or money service",1116,validation
+2023-06,Mortgage,1703,validation
+2023-06,Student loan,397,validation
+2023-06,Debt collection,5599,validation
+2023-06,Checking or savings account,3883,validation
+2023-06,Vehicle loan or lease,929,validation
+2023-06,"Money transfer, virtual currency, or money service",1158,validation
+2023-07,Mortgage,1634,validation
+2023-07,Student loan,570,validation
+2023-07,Debt collection,5414,validation
+2023-07,Checking or savings account,4279,validation
+2023-07,Vehicle loan or lease,907,validation
+2023-07,"Money transfer, virtual currency, or money service",1074,validation
+2023-08,Mortgage,1844,validation
+2023-08,Student loan,769,validation
+2023-08,Debt collection,5844,validation
+2023-08,Checking or savings account,4315,validation
+2023-08,Vehicle loan or lease,1253,validation
+2023-08,"Money transfer, virtual currency, or money service",1160,validation
+2023-09,Mortgage,1632,validation
+2023-09,Student loan,1423,validation
+2023-09,Debt collection,5298,validation
+2023-09,Checking or savings account,3811,validation
+2023-09,Vehicle loan or lease,946,validation
+2023-09,"Money transfer, virtual currency, or money service",1111,validation
+2023-10,Mortgage,1721,validation
+2023-10,Student loan,2130,validation
+2023-10,Debt collection,5450,validation
+2023-10,Checking or savings account,3795,validation
+2023-10,Vehicle loan or lease,1012,validation
+2023-10,"Money transfer, virtual currency, or money service",1267,validation
+2023-11,Mortgage,1818,validation
+2023-11,Student loan,1625,validation
+2023-11,Debt collection,5566,validation
+2023-11,Checking or savings account,3770,validation
+2023-11,Vehicle loan or lease,995,validation
+2023-11,"Money transfer, virtual currency, or money service",1130,validation
+2023-12,Mortgage,1779,validation
+2023-12,Student loan,1289,validation
+2023-12,Debt collection,6137,validation
+2023-12,Checking or savings account,3821,validation
+2023-12,Vehicle loan or lease,918,validation
+2023-12,"Money transfer, virtual currency, or money service",1232,validation
+2024-01,Mortgage,1812,validation
+2024-01,Student loan,1617,validation
+2024-01,Debt collection,7176,validation
+2024-01,Checking or savings account,4032,validation
+2024-01,Vehicle loan or lease,1070,validation
+2024-01,"Money transfer, virtual currency, or money service",1286,validation
+2024-02,Mortgage,1942,validation
+2024-02,Student loan,1222,validation
+2024-02,Debt collection,8772,validation
+2024-02,Checking or savings account,3833,validation
+2024-02,Vehicle loan or lease,1032,validation
+2024-02,"Money transfer, virtual currency, or money service",1306,validation
+2024-03,Mortgage,1893,validation
+2024-03,Student loan,1323,validation
+2024-03,Debt collection,12354,validation
+2024-03,Checking or savings account,4257,validation
+2024-03,Vehicle loan or lease,1333,validation
+2024-03,"Money transfer, virtual currency, or money service",1457,validation
+2024-04,Mortgage,1817,validation
+2024-04,Student loan,1159,validation
+2024-04,Debt collection,12912,validation
+2024-04,Checking or savings account,4327,validation
+2024-04,Vehicle loan or lease,1094,validation
+2024-04,"Money transfer, virtual currency, or money service",1285,validation
+2024-05,Mortgage,1713,validation
+2024-05,Student loan,1260,validation
+2024-05,Debt collection,12427,validation
+2024-05,Checking or savings account,4539,validation
+2024-05,Vehicle loan or lease,1050,validation
+2024-05,"Money transfer, virtual currency, or money service",1351,validation
+2024-06,Mortgage,1575,validation
+2024-06,Student loan,987,validation
+2024-06,Debt collection,11099,validation
+2024-06,Checking or savings account,3886,validation
+2024-06,Vehicle loan or lease,946,validation
+2024-06,"Money transfer, virtual currency, or money service",1268,validation
+2024-07,Mortgage,1737,validation
+2024-07,Student loan,960,validation
+2024-07,Debt collection,12149,validation
+2024-07,Checking or savings account,4329,validation
+2024-07,Vehicle loan or lease,1025,validation
+2024-07,"Money transfer, virtual currency, or money service",1328,validation
+2024-08,Mortgage,1861,validation
+2024-08,Student loan,882,validation
+2024-08,Debt collection,14171,validation
+2024-08,Checking or savings account,4682,validation
+2024-08,Vehicle loan or lease,1150,validation
+2024-08,"Money transfer, virtual currency, or money service",1557,validation
+2024-09,Mortgage,1779,validation
+2024-09,Student loan,1549,validation
+2024-09,Debt collection,15475,validation
+2024-09,Checking or savings account,4270,validation
+2024-09,Vehicle loan or lease,1087,validation
+2024-09,"Money transfer, virtual currency, or money service",1316,validation
+2024-10,Mortgage,1809,validation
+2024-10,Student loan,1459,validation
+2024-10,Debt collection,17483,validation
+2024-10,Checking or savings account,4692,validation
+2024-10,Vehicle loan or lease,1187,validation
+2024-10,"Money transfer, virtual currency, or money service",1450,validation
+2024-11,Mortgage,1718,validation
+2024-11,Student loan,916,validation
+2024-11,Debt collection,15454,validation
+2024-11,Checking or savings account,5175,validation
+2024-11,Vehicle loan or lease,1141,validation
+2024-11,"Money transfer, virtual currency, or money service",1416,validation
+2024-12,Mortgage,1784,validation
+2024-12,Student loan,1323,validation
+2024-12,Debt collection,16424,validation
+2024-12,Checking or savings account,4798,validation
+2024-12,Vehicle loan or lease,1245,validation
+2024-12,"Money transfer, virtual currency, or money service",1731,validation
+2025-01,Mortgage,2204,test
+2025-01,Student loan,2232,test
+2025-01,Debt collection,23830,test
+2025-01,Checking or savings account,18367,test
+2025-01,Vehicle loan or lease,1920,test
+2025-01,"Money transfer, virtual currency, or money service",49743,test
+2025-02,Mortgage,1754,test
+2025-02,Student loan,1868,test
+2025-02,Debt collection,17032,test
+2025-02,Checking or savings account,5453,test
+2025-02,Vehicle loan or lease,1358,test
+2025-02,"Money transfer, virtual currency, or money service",6128,test
+2025-03,Mortgage,1824,test
+2025-03,Student loan,3413,test
+2025-03,Debt collection,20369,test
+2025-03,Checking or savings account,5070,test
+2025-03,Vehicle loan or lease,1309,test
+2025-03,"Money transfer, virtual currency, or money service",3032,test
+2025-04,Mortgage,1846,test
+2025-04,Student loan,2159,test
+2025-04,Debt collection,20304,test
+2025-04,Checking or savings account,5229,test
+2025-04,Vehicle loan or lease,1423,test
+2025-04,"Money transfer, virtual currency, or money service",2504,test
+2025-05,Mortgage,1969,test
+2025-05,Student loan,1904,test
+2025-05,Debt collection,21959,test
+2025-05,Checking or savings account,5394,test
+2025-05,Vehicle loan or lease,1643,test
+2025-05,"Money transfer, virtual currency, or money service",2652,test
+2025-06,Mortgage,1903,test
+2025-06,Student loan,1410,test
+2025-06,Debt collection,21860,test
+2025-06,Checking or savings account,5558,test
+2025-06,Vehicle loan or lease,1708,test
+2025-06,"Money transfer, virtual currency, or money service",2408,test
+2025-07,Mortgage,2173,test
+2025-07,Student loan,1564,test
+2025-07,Debt collection,24873,test
+2025-07,Checking or savings account,6403,test
+2025-07,Vehicle loan or lease,1970,test
+2025-07,"Money transfer, virtual currency, or money service",2823,test
+2025-08,Mortgage,2047,test
+2025-08,Student loan,1268,test
+2025-08,Debt collection,25627,test
+2025-08,Checking or savings account,6505,test
+2025-08,Vehicle loan or lease,1738,test
+2025-08,"Money transfer, virtual currency, or money service",2879,test
+2025-09,Mortgage,2021,test
+2025-09,Student loan,1326,test
+2025-09,Debt collection,26817,test
+2025-09,Checking or savings account,6141,test
+2025-09,Vehicle loan or lease,1743,test
+2025-09,"Money transfer, virtual currency, or money service",2505,test
+2025-10,Mortgage,2091,test
+2025-10,Student loan,1315,test
+2025-10,Debt collection,25550,test
+2025-10,Checking or savings account,6309,test
+2025-10,Vehicle loan or lease,1768,test
+2025-10,"Money transfer, virtual currency, or money service",4193,test
+2025-11,Mortgage,2218,test
+2025-11,Student loan,1189,test
+2025-11,Debt collection,25716,test
+2025-11,Checking or savings account,6077,test
+2025-11,Vehicle loan or lease,1907,test
+2025-11,"Money transfer, virtual currency, or money service",2604,test
+2025-12,Mortgage,2663,test
+2025-12,Student loan,1665,test
+2025-12,Debt collection,29344,test
+2025-12,Checking or savings account,7702,test
+2025-12,Vehicle loan or lease,2292,test
+2025-12,"Money transfer, virtual currency, or money service",3154,test

@@ -1,4 +1,27 @@
-# 大规模金融投诉 CSV 分析程序
+# 金融产品月度投诉量的异常增长识别研究
+
+本项目按同一论文逐阶段累积。阶段一的大文件分析器保留；阶段二新增可复现的产品月基线、时间划分、800次配对注入和AI协作记录。公开阶段二提交标签为`phase-2-submission`，阶段一标签保留。
+
+## 阶段二：直接运行，不需要8GB原文件
+
+在项目根目录，Python 3.10及以上：
+
+```text
+python scripts/run_phase2.py
+python scripts/verify_evidence.py evidence_phase2
+```
+
+统一入口依次执行手算例、全部32项测试、历史9项哈希和真实聚合基线；失败立即停止。结果在`results/phase2/`，已保存的本次输出在`evidence_phase2/`，其7项产物哈希可单独核验。核心无第三方依赖。
+
+PyCharm打开本项目后，选择已共享的 **阶段二：样例、测试与基线** 运行项。若未显示，打开`scripts/run_phase2.py`并运行，解释器用本项目`.venv`，工作目录用项目根目录。其他电脑无需沿用本机解释器路径。不要直接运行`phase2.py`文件；独立基线也可用`python -m complaints_analyzer.phase2`。
+
+数据字典见`docs/phase2_data_card.md`；时间划分、分数、预算及模拟含义见`docs/phase2_protocol.md`。主实验为六类原标签，624个产品月，验证144个，保留测试不评分。无真实异常标签，模拟检出率不是真实准确率。完整15条提示词与AI实际行动在`docs/phase2_prompts.json`及报告附录B。
+
+报告重建：安装`requirements-report.txt`后，`python scripts/build_phase2_report.py --output-dir reports`。默认Windows中文字体，可用`--font-regular`与`--font-bold`指定其他字体。生成6页正文、参考/附录、可编辑Markdown及图2 SVG。源码片段自动来自实际实现。
+
+本次AI操作PyCharm的解释器为Python3.14.5；不是成员自行运行的日志。两位成员职责和可核实参与范围在报告第6节；AI协作说明不代替个人实际操作记录。
+
+以下保留阶段一使用及历史证据说明：
 
 阶段一原型。输入老师提供的约 8.93 GB CSV，逐条处理逻辑记录，输出聚合统计、质量诊断、统计口径和校验结果。未训练 AI 模型，不作因果推断，不预测消费者赔付。数据文件不随仓库或压缩包分发。
 

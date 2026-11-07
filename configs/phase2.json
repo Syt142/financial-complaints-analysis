@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "products": ["Mortgage", "Student loan", "Debt collection", "Checking or savings account", "Vehicle loan or lease", "Money transfer, virtual currency, or money service"],
+  "panel_start": "2017-05", "panel_end": "2025-12",
+  "warmup_end": "2018-04", "development_end": "2022-12",
+  "validation_end": "2024-12", "test_end": "2025-12",
+  "window": 12, "scale_floor": 1.0, "mad_multiplier": 1.4826,
+  "budget": 20, "seeds": [0,1,2,3,4,5,6,7,8,9],
+  "trials_per_seed": 20, "growth_fractions": [0.25,0.5,1.0,2.0],
+  "interpretation": "Retrospective ranking after each complete month; no true anomaly labels. Test ranking is not produced in phase 2."
+}

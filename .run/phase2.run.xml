@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="阶段二：样例、测试与基线" type="PythonConfigurationType" factoryName="Python">
+    <module name="phase1_project" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="true" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/run_phase2.py" />
+    <option name="PARAMETERS" value="" />
+    <option name="MODULE_MODE" value="false" />
+    <envs><env name="PYTHONUNBUFFERED" value="1" /><env name="PYTHONIOENCODING" value="utf-8" /></envs>
+    <method v="2" />
+  </configuration>
+</component>
