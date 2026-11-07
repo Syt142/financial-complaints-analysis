@@ -1,3 +1,4 @@
 # Evidence hashes cover exact original bytes, including line endings.
 evidence/** -text whitespace=cr-at-eol
 evidence_phase2/** -text whitespace=cr-at-eol
+configs/** -text whitespace=cr-at-eol
