@@ -48,8 +48,9 @@ pdfmetrics.registerFont(TTFont('CN2', args.font_regular))
 pdfmetrics.registerFont(TTFont('CN2B', args.font_bold))
 pdfmetrics.registerFontFamily('CN2', normal='CN2',bold='CN2B',italic='CN2',boldItalic='CN2B')
 W = A4[0]-2*56.7-12
-body = ParagraphStyle('Body2',fontName='CN2',fontSize=10.5,leading=12.075,spaceAfter=7,wordWrap='CJK')
+body = ParagraphStyle('Body2',fontName='CN2',fontSize=10.5,leading=12.075,spaceAfter=7,wordWrap='CJK',rightIndent=8)
 small = ParagraphStyle('Small2',parent=body,fontSize=10,leading=11.5,spaceAfter=5)
+cell = ParagraphStyle('Cell2',parent=small,rightIndent=0)
 title = ParagraphStyle('Title2',parent=body,fontName='CN2B',fontSize=18,leading=24,alignment=TA_CENTER,spaceAfter=8)
 head = ParagraphStyle('Head2',parent=body,fontName='CN2B',fontSize=13,leading=17,spaceBefore=7,spaceAfter=7,keepWithNext=True)
 cap = ParagraphStyle('Cap2',parent=small,fontName='CN2B',keepWithNext=True,spaceBefore=4)
@@ -66,7 +67,7 @@ def page():
 def table(label, headers, rows, widths):
     p(label,cap)
     allrows=[headers]+rows
-    data=[[Paragraph(html.escape(str(v)).replace('\n','<br/>'),small) for v in row] for row in allrows]
+    data=[[Paragraph(html.escape(str(v)).replace('\n','<br/>'),cell) for v in row] for row in allrows]
     t=Table(data,colWidths=[W*x/sum(widths) for x in widths],repeatRows=1,hAlign='LEFT')
     t.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND',(0,0),(-1,0),colors.HexColor('#ECEFF1')),
                           ('LINEBELOW',(0,0),(-1,0),.7,colors.HexColor('#455A64')),
