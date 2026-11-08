@@ -101,8 +101,9 @@ p('金融产品月度投诉量的异常增长识别研究', title)
 md[-1] = '# ' + md[-1]
 p('——基于大规模投诉记录的时间回测', ParagraphStyle('Subtitle', parent=title, fontSize=13, leading=17))
 p('孙永滔　束琪遇', ParagraphStyle('Authors', parent=title, fontName='CN2', fontSize=11.5, leading=15))
-p(f'阶段二　数据与实验设计　　2026年11月8日　　<link href="{VERSION}" color="#244F70">项目版本 {commit[:12]}</link>',
-  ParagraphStyle('Metadata', parent=small, rightIndent=0, alignment=TA_CENTER, spaceAfter=9))
+p('阶段二　数据与实验设计　　2026年11月8日',
+  ParagraphStyle('Metadata', parent=small, rightIndent=0, alignment=TA_CENTER, spaceAfter=6))
+p(f'项目仓库　<link href="{repo}">{repo}</link><br/>提交标签　phase-2-submission<br/>提交版本　<link href="{VERSION}">{commit}</link>',small)
 p('<b>摘　要　</b>为确定有限复核名额下应优先核查的投诉增长月份，本文利用阶段一从1,654.54万条金融投诉中提取的月度计数，构建六类产品的624个产品月面板。以前12个月计数的中位数与绝对偏差中位数为基线，在144个验证候选中选取20条，并实施800次单点增长模拟。计数增加25%和100%时，入选比例分别为47%和95%。债务催收占真实候选前20名中的7条，部分月份相邻。结果显示该方法对强增长较敏感，温和增长和连续事件仍需进一步评估。',small)
 p('<b>关键词　</b>金融投诉、异常增长、时间回测、滚动中位数、大模型辅助编程',small)
 h('1　引言')
@@ -215,7 +216,6 @@ refs=[
  '[5] Liu F T, Ting K M, Zhou Z H. Isolation Forest. IEEE International Conference on Data Mining, 2008, 413–422. DOI 10.1109/ICDM.2008.17.'
 ]
 for ref in refs:p(ref,small)
-p(f'项目仓库　<link href="{repo}">{repo}</link><br/>提交标签　phase-2-submission<br/>提交版本　<link href="{VERSION}">{commit}</link>',small)
 
 
 def footer(canvas,doc):
