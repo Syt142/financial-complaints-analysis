@@ -19,6 +19,8 @@ PyCharm打开本项目后，选择已共享的 **阶段二：样例、测试与�
 
 报告重建：安装`requirements-report.txt`后，`python scripts/build_phase2_report.py --output-dir reports`。默认Windows中文字体，可用`--font-regular`与`--font-bold`指定其他字体。生成5页正文、参考文献页、可编辑Markdown及图1 SVG。源码片段自动来自实际实现。
 
+生成本地提交版时，可用 `--student-ids <孙永滔学号> <束琪遇学号>` 设置首页署名。PDF 代码清单的函数名链接到对应提交的源码行。
+
 本次AI操作PyCharm的解释器为Python3.14.5；不是成员自行运行的日志。两位成员职责和可核实参与范围在正文第4节表5；AI协作说明不代替个人实际操作记录。
 
 以下保留阶段一使用及历史证据说明：

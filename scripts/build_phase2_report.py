@@ -9,13 +9,14 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import textwrap
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Preformatted, CondPageBreak, KeepTogether
 from reportlab.graphics.shapes import Drawing, Line, Circle, String, PolyLine
 from reportlab.graphics import renderSVG
@@ -28,7 +29,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--output-dir', type=Path, required=True)
 parser.add_argument('--font-regular', default='C:/Windows/Fonts/simsun.ttc')
 parser.add_argument('--font-bold', default='C:/Windows/Fonts/simhei.ttf')
+parser.add_argument('--student-ids', nargs=2, metavar=('SUN_ID', 'SHU_ID'),
+                    help='Student IDs in byline order: Sun Yongtao, Shu Qiyu.')
 args = parser.parse_args()
+if args.student_ids and not all(re.fullmatch(r'[0-9]{8}', value) for value in args.student_ids):
+    parser.error('--student-ids expects two eight-digit IDs')
 args.output_dir.mkdir(parents=True, exist_ok=True)
 E = ROOT / 'evidence_phase2'
 M = json.loads((E/'metrics.json').read_text(encoding='utf-8'))
@@ -58,7 +63,15 @@ head = ParagraphStyle('Section', parent=small, fontName='CN2B', fontSize=13, lea
 subhead = ParagraphStyle('Subsection', parent=head, fontSize=11, leading=13, spaceBefore=4)
 cap = ParagraphStyle('Caption', parent=small, alignment=TA_CENTER, fontName='CN2B',
                      rightIndent=0, keepWithNext=True, spaceBefore=4, spaceAfter=3)
-mono = ParagraphStyle('Code',fontName='Courier',fontSize=10,leading=11.5,spaceAfter=4)
+code_font = 'Courier'
+console_font = Path('C:/Windows/Fonts/consola.ttf')
+if console_font.is_file():
+    pdfmetrics.registerFont(TTFont('ListingMono', str(console_font)))
+    code_font = 'ListingMono'
+mono = ParagraphStyle('Code',fontName=code_font,fontSize=10,leading=12)
+line_numbers = ParagraphStyle('SourceLines', parent=mono, textColor=colors.HexColor('#60717C'))
+listing_caption = ParagraphStyle('ListingTitle', parent=cell, fontName='CN2B', leading=12)
+listing_source = ParagraphStyle('ListingSource', parent=mono, alignment=TA_RIGHT)
 
 story, md = [], []
 def p(text, style=body):
@@ -88,10 +101,38 @@ def table(label, headers, rows, widths, *, long_table=False):
     story.extend([t,Spacer(1,6)])
     md.append('\n'.join(['| '+' | '.join(headers)+' |','| '+' | '.join(['---']*len(headers))+' |']+
                         ['| '+' | '.join(str(v).replace('\n','<br>') for v in row)+' |' for row in rows]))
-def code(text):
-    if any(len(line)>78 for line in text.splitlines()):
-        raise ValueError('Code line too wide')
-    story.append(Preformatted(text,mono));md.append('```python\n'+text+'\n```')
+def code(caption, function, first_statement, last_statement):
+    source, first_line = inspect.getsourcelines(function)
+    start = next(i for i, line in enumerate(source) if line.lstrip().startswith(first_statement))
+    stop = next(i for i in range(start, len(source)) if source[i].lstrip().startswith(last_statement))
+    snippet = textwrap.dedent(''.join(source[start:stop + 1])).rstrip()
+    first, last = first_line + start, first_line + stop
+    anchor = f'L{first}' if first == last else f'L{first}-L{last}'
+    url = f'{repo}/blob/{commit}/complaints_analyzer/phase2.py#{anchor}'
+    source_label = f'phase2.py / {function.__name__}()'
+    header = Table([[Paragraph(caption, listing_caption),
+                     Paragraph(f'<link href="{url}" color="#425460">{source_label}</link>', listing_source)]],
+                   colWidths=[W * .45, W * .55], hAlign='LEFT')
+    header.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+                                ('TOPPADDING',(0,0),(-1,-1),3),('BOTTOMPADDING',(0,0),(-1,-1),3)]))
+    gutter = 26
+    available = W - gutter - 12
+    if max(pdfmetrics.stringWidth(line, code_font, 10) for line in snippet.splitlines()) > available:
+        raise ValueError(f'Listing exceeds the text column: {caption}')
+    numbers = '\n'.join(str(n) for n in range(first, last + 1))
+    panel = Table([[Preformatted(numbers, line_numbers), Preformatted(snippet, mono)]],
+                  colWidths=[gutter, W - gutter], hAlign='LEFT')
+    panel.setStyle(TableStyle([
+        ('BACKGROUND',(0,0),(-1,-1),colors.HexColor('#F6F7F8')),
+        ('LINEABOVE',(0,0),(-1,0),.55,colors.HexColor('#81909A')),
+        ('LINEBEFORE',(1,0),(1,0),.35,colors.HexColor('#CFD5D9')),
+        ('LINEBELOW',(0,-1),(-1,-1),.4,colors.HexColor('#ABB5BB')),
+        ('VALIGN',(0,0),(-1,-1),'TOP'),('TOPPADDING',(0,0),(-1,-1),4),
+        ('BOTTOMPADDING',(0,0),(-1,-1),4),('LEFTPADDING',(0,0),(-1,-1),6),
+        ('RIGHTPADDING',(0,0),(-1,-1),6)]))
+    story.extend([KeepTogether([header, panel]), Spacer(1, 4)])
+    md.extend([f'**{caption}**　[{source_label}（第{first}–{last}行）]({url})',
+               '```python\n' + snippet + '\n```'])
 def link(path,label=None):
     return f'<link href="{repo}/blob/{commit}/{path}" color="#1F4365">{label or path}</link>'
 def pct(x):return f'{x*100:.2f}%'
@@ -100,7 +141,10 @@ def pct(x):return f'{x*100:.2f}%'
 p('金融产品月度投诉量的异常增长识别研究', title)
 md[-1] = '# ' + md[-1]
 p('——基于大规模投诉记录的时间回测', ParagraphStyle('Subtitle', parent=title, fontSize=13, leading=17))
-p('孙永滔　束琪遇', ParagraphStyle('Authors', parent=title, fontName='CN2', fontSize=11.5, leading=15))
+authors = ['孙永滔', '束琪遇']
+if args.student_ids:
+    authors = [f'{name}（{number}）' for name, number in zip(authors, args.student_ids)]
+p('　　　'.join(authors), ParagraphStyle('Authors', parent=title, fontName='CN2', fontSize=11.5, leading=15))
 p('阶段二　数据与实验设计　　2026年11月8日',
   ParagraphStyle('Metadata', parent=small, rightIndent=0, alignment=TA_CENTER, spaceAfter=6))
 p(f'项目仓库　<link href="{repo}">{repo}</link><br/>提交标签　phase-2-submission<br/>提交版本　<link href="{VERSION}">{commit}</link>',small)
@@ -132,20 +176,12 @@ table('表2　六类产品的时间划分',['区段','起止月份','产品月�
 p('表2将同月各产品划入同一区段，共104个月。阶段一曾观察2025年度总量，本阶段将该年的逐月评分保留至模型比较。按收件月回测反映事后可见的信息。数据库公开可能滞后，且相邻月份可能相关，在线预警效果仍需专门验证。')
 sub('2.3　异常增长的评分')
 p('对每个产品月，以此前12个完整月的中位数作为参照，以计数相对中位数的绝对偏差中位数（MAD）度量历史波动。代码1给出历史窗口。代码2将尺度下限设为1条并记录尺度触底，避免历史波动为零时发生除零。中位数使用Python标准库计算[4]。')
-p('代码1　构造历史窗口',cap)
-window_lines=[line.strip() for line in inspect.getsource(phase2.score_panel).splitlines() if 'history = [' in line]
-code('\n'.join(window_lines))
-p('代码2　计算向上偏离分数',cap)
-source=inspect.getsource(phase2.score_point).splitlines()
-code('\n'.join(line[4:] for line in source[source.index('    median = statistics.median(history)'):]))
+code('代码1　构造历史窗口', phase2.score_panel, 'history = [', 'history = [')
+code('代码2　计算向上偏离分数', phase2.score_point, 'median = ', '"zero_mad":')
 p('若历史12个月均为100条，当前为130条，则中位数为100、MAD为0、尺度取1，得到分数30。真实验证期的零MAD候选有'+str(M['zero_mad_count'])+'个。将两年验证期的正分数由高到低排序，取前20名。并列时依次按月份和原标签升序排列。完整实现见'+link('complaints_analyzer/phase2.py','评分与排序源码')+'。')
 sub('2.4　模拟实验与实现检验')
 p('以模拟增长点进入前20的次数除以试验次数，衡量固定复核预算下的检出率。每个种子从144个验证位置中无放回抽取20个位置。每次只在一个位置将计数增加25%、50%、100%或200%，向上取整且至少增加1条。四档共用同一组位置，10个种子（0至9）合计800次。每次在副本上重新评分，单点注入可影响随后12个月的历史基线。')
-p('代码3　向单个产品月注入增长',cap)
-inj=inspect.getsource(phase2.injection_experiment).splitlines()
-start=next(i for i,l in enumerate(inj) if 'altered = counts.copy()' in l)
-end=next(i for i,l in enumerate(inj[start:],start) if 'scored = [' in l)
-code('\n'.join(l[16:] for l in inj[start:end]))
+code('代码3　向单个产品月注入增长', phase2.injection_experiment, 'altered = counts.copy()', 'altered[(month, product)] =')
 table('表3　实现检验与复现条件',['检验项目','结果'],[
  ['阶段一回归','20项通过，覆盖CSV结构、计数、ID及隐私检查。'],
  ['阶段二新增','12项通过，覆盖时间窗口、未来值扰动、缺月、并列排序、位置配对及输入完整性等。'],
