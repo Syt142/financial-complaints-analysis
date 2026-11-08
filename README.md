@@ -17,7 +17,7 @@ PyCharm打开本项目后，选择已共享的 **阶段二：样例、测试与�
 
 数据字典见`docs/phase2_data_card.md`；时间划分、分数、预算及模拟含义见`docs/phase2_protocol.md`。主实验为六类原标签，624个产品月，验证144个，保留测试不评分。无真实异常标签，模拟检出率不是真实准确率。完整15条提示词与AI实际行动在`docs/phase2_prompts.json`及论文正文第4节表6。
 
-报告重建：安装`requirements-report.txt`后，`python scripts/build_phase2_report.py --output-dir reports`。默认Windows中文字体，可用`--font-regular`与`--font-bold`指定其他字体。生成5页正文、参考文献页、可编辑Markdown及图1 SVG。源码片段自动来自实际实现。
+报告重建：安装`requirements-report.txt`后，`python scripts/build_phase2_report.py --output-dir reports`。默认Windows中文字体，可用`--font-regular`与`--font-bold`指定其他字体。生成6页正文、参考文献页、可编辑Markdown及图1 SVG。源码片段自动来自实际实现。
 
 生成本地提交版时，可用 `--student-ids <孙永滔学号> <束琪遇学号>` 设置首页署名。PDF 代码清单的函数名链接到对应提交的源码行。
 

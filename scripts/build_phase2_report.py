@@ -24,6 +24,8 @@ from reportlab.graphics import renderSVG
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from complaints_analyzer import phase2
+sys.path.insert(0, str(ROOT / 'tests'))
+from test_phase2 import Phase2Tests
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--output-dir', type=Path, required=True)
@@ -108,8 +110,11 @@ def code(caption, function, first_statement, last_statement):
     snippet = textwrap.dedent(''.join(source[start:stop + 1])).rstrip()
     first, last = first_line + start, first_line + stop
     anchor = f'L{first}' if first == last else f'L{first}-L{last}'
-    url = f'{repo}/blob/{commit}/complaints_analyzer/phase2.py#{anchor}'
-    source_label = f'phase2.py / {function.__name__}()'
+    source_path = Path(inspect.getsourcefile(function)).relative_to(ROOT).as_posix()
+    url = f'{repo}/blob/{commit}/{source_path}#{anchor}'
+    source_label = f'{Path(source_path).name} / {function.__name__}()'
+    if pdfmetrics.stringWidth(source_label, code_font, 10) > W * .55 - 12:
+        source_label = source_path
     header = Table([[Paragraph(caption, listing_caption),
                      Paragraph(f'<link href="{url}" color="#425460">{source_label}</link>', listing_source)]],
                    colWidths=[W * .45, W * .55], hAlign='LEFT')
@@ -176,12 +181,18 @@ table('表2　六类产品的时间划分',['区段','起止月份','产品月�
 p('表2将同月各产品划入同一区段，共104个月。阶段一曾观察2025年度总量，本阶段将该年的逐月评分保留至模型比较。按收件月回测反映事后可见的信息。数据库公开可能滞后，且相邻月份可能相关，在线预警效果仍需专门验证。')
 sub('2.3　异常增长的评分')
 p('对每个产品月，以此前12个完整月的中位数作为参照，以计数相对中位数的绝对偏差中位数（MAD）度量历史波动。代码1给出历史窗口。代码2将尺度下限设为1条并记录尺度触底，避免历史波动为零时发生除零。中位数使用Python标准库计算[4]。')
-code('代码1　构造历史窗口', phase2.score_panel, 'history = [', 'history = [')
+code('代码1　历史预热与窗口构造', phase2.score_panel, 'if i < cfg["window"]:', 'history = [')
 code('代码2　计算向上偏离分数', phase2.score_point, 'median = ', '"zero_mad":')
 p('若历史12个月均为100条，当前为130条，则中位数为100、MAD为0、尺度取1，得到分数30。真实验证期的零MAD候选有'+str(M['zero_mad_count'])+'个。将两年验证期的正分数由高到低排序，取前20名。并列时依次按月份和原标签升序排列。完整实现见'+link('complaints_analyzer/phase2.py','评分与排序源码')+'。')
+p('代码3给出固定预算排序的核心实现。仅保留向上偏离的候选，预算不足时返回全部可用候选。月份和产品名提供确定性的并列顺序，使同一输入在不同运行中得到相同名单。')
+code('代码3　固定预算下的候选排序', phase2.top_k, 'if budget < 1:', 'key=lambda')
 sub('2.4　模拟实验与实现检验')
 p('以模拟增长点进入前20的次数除以试验次数，衡量固定复核预算下的检出率。每个种子从144个验证位置中无放回抽取20个位置。每次只在一个位置将计数增加25%、50%、100%或200%，向上取整且至少增加1条。四档共用同一组位置，10个种子（0至9）合计800次。每次在副本上重新评分，单点注入可影响随后12个月的历史基线。')
-code('代码3　向单个产品月注入增长', phase2.injection_experiment, 'altered = counts.copy()', 'altered[(month, product)] =')
+code('代码4　向单个产品月注入增长', phase2.injection_experiment, 'altered = counts.copy()', 'altered[(month, product)] =')
+p('单次注入先复制完整计数映射，再修改一个产品月。因此四种幅度可在相同起点上比较。检出结果由重新评分后的名单决定，注入点之后的月份继续沿用滚动规则。程序还记录该位置在原始名单中是否已入选，用于解释模拟结果的增量贡献。')
+p('代码5检验时间顺序是否被实际实现：先保存评分，再把最后一个月份的计数改成一亿，断言此前所有月份的结果相同。若历史窗口错误地包含未来值，这个断言就可能失败。该测试对应表6中关于检验AI代码的追问。')
+code('代码5　未来数据扰动的回归测试', Phase2Tests.test_future_change_cannot_change_past,
+     'def test_future_change_cannot_change_past', 'self.assertEqual(')
 table('表3　实现检验与复现条件',['检验项目','结果'],[
  ['阶段一回归','20项通过，覆盖CSV结构、计数、ID及隐私检查。'],
  ['阶段二新增','12项通过，覆盖时间窗口、未来值扰动、缺月、并列排序、位置配对及输入完整性等。'],
@@ -230,6 +241,7 @@ peak = max(rows, key=lambda r: int(r['count']))
 p(f'图1中投诉量最高的月份为{peak["month"]}，共{int(peak["count"]):,}条。此时历史中位数已升至{float(peak["baseline"]):,.0f}条，MAD为{float(peak["mad"]):,.1f}条，偏离分数为{float(peak["score"]):.2f}。与4月相比，10月数量更高，但较宽的历史波动范围降低了该月的排序。这一差异表明，解释候选线索需要同时查阅原始计数、历史参照和分数。')
 sub('3.3　适用范围与局限')
 p('各档模拟对同一位置单独增加投诉数。对原本排在前20以外的173次试验，增加25%后有67次进入前20，约占38.7%。温和变化更容易受原有波动掩盖。真实事件还可能缓慢演变或同时波及多个产品，单点模拟只能检验其中一种变化方式。')
+p('有限复核预算要求同时考虑增长强度与候选竞争。同样增加25%，历史波动较窄的月份可能迅速升至前列，而本来波动较大的产品仍可能排在20名之后。因此，47%的检出率由本面板、所抽月份和预算共同决定。后续比较方法时，应保持这些条件一致，并分别检查各产品的检出情况。')
 p('跨产品比较还受到市场规模和投诉渠道的影响。本文采用产品自身的历史参照，并保留有限复核预算，仍可能遗漏低频产品和改名产品。实际调查须结合业务背景，并核对数据在调查当时是否已经公开。')
 story.append(CondPageBreak(310))
 h('4　成员分工与大模型协作')
@@ -260,7 +272,10 @@ def footer(canvas,doc):
     canvas.drawCentredString(A4[0]/2,35,str(doc.page))
     canvas.restoreState()
 
-target=args.output_dir/'孙永滔_束琪遇_phase2_report.pdf'
+report_name = '孙永滔_束琪遇_phase2_report.pdf'
+if args.student_ids:
+    report_name = f'{args.student_ids[0]}孙永滔_{args.student_ids[1]}束琪遇_phase2_report.pdf'
+target=args.output_dir/report_name
 doc=SimpleDocTemplate(str(target),pagesize=A4,rightMargin=56.7,leftMargin=56.7,topMargin=56.7,bottomMargin=56.7,
                       title='金融产品月度投诉量的异常增长识别研究',author='孙永滔、束琪遇')
 doc.build(story,onFirstPage=footer,onLaterPages=footer)
